@@ -2,31 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <!-- Logo Image -->
-    <ImageView
-        android:id="@+id/logo1"
-        android:layout_gravity="center"
-        android:layout_width="150dp"
-        android:layout_marginTop="200dp"
-        android:layout_height="150dp"
-        android:src="@drawable/clean_logo"
-        android:contentDescription="App Logo" />
 
-    <!-- App Name Text -->
     <TextView
-        android:id="@+id/app_name1"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CareerMitra Main Page"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:layout_marginTop="16dp" />
+        android:text="Main Screen"
+        android:textSize="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="250dp"
+        />
 
 </LinearLayout>
