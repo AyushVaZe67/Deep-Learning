@@ -25,12 +25,12 @@
         android:background="@drawable/rounded_button"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button2"
+        android:id="@+id/goToAlgorithmsScreen"
         android:layout_marginRight="100dp"
         android:layout_marginLeft="100dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button 2"
+        android:text="Algorithms"
         android:backgroundTint="#2196F3"
         android:textColor="#FFFFFF"
         android:elevation="4dp"
@@ -39,10 +39,10 @@
         android:background="@drawable/rounded_button"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button3"
+        android:id="@+id/goToProgrammingConcepts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button 3"
+        android:text="Programming Concepts"
         android:backgroundTint="#FF5722"
         android:layout_marginRight="100dp"
         android:layout_marginLeft="100dp"

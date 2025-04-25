@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainScreen extends AppCompatActivity {
 
-    AppCompatButton gotoOperatingSystemScreen;
+    AppCompatButton gotoOperatingSystemScreen,goToAlgorithmsScreen,goToProgrammingConcepts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +27,27 @@ public class MainScreen extends AppCompatActivity {
         });
 
         gotoOperatingSystemScreen = findViewById(R.id.gotoOperatingSystemScreen);
+        goToAlgorithmsScreen = findViewById(R.id.goToAlgorithmsScreen);
+        goToProgrammingConcepts = findViewById(R.id.goToProgrammingConcepts);
 
         gotoOperatingSystemScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainScreen.this,OperatingSystemsScreen.class));
+            }
+        });
+
+        goToAlgorithmsScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainScreen.this,AlgorithmsScreen.class));
+            }
+        });
+
+        goToProgrammingConcepts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainScreen.this,ProgrammingConceptsScreen.class));
             }
         });
     }

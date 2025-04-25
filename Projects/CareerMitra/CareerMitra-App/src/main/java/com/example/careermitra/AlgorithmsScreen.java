@@ -1,6 +1,5 @@
 package com.example.careermitra;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -20,45 +19,43 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 
-public class OperatingSystemsScreen extends AppCompatActivity {
+public class AlgorithmsScreen extends AppCompatActivity {
 
     private LinearLayout questionContainer;
     private final ArrayList<RadioGroup> radioGroups = new ArrayList<>();
-    private final ArrayList<String[]> optionsList = new ArrayList<>();
     private final ArrayList<RadioButton[]> radioButtonsList = new ArrayList<>();
 
     private final String[] questions = {
-            "1. Which of the following is an Operating System?",
-            "2. Which one is NOT a function of Operating System?",
-            "3. Which of the following is a mobile Operating System?",
-            "4. What is the core of the Operating System called?",
-            "5. Which of the following is a multi-user OS?"
+            "1. What is the time complexity of binary search?",
+            "2. Which sorting algorithm is the fastest in average case?",
+            "3. What does 'Big O' notation describe?",
+            "4. Which algorithm technique does merge sort use?",
+            "5. What is the worst-case time complexity of bubble sort?"
     };
 
     private final String[][] options = {
-            {"Oracle", "Linux", "Google", "Intel"},
-            {"Memory Management", "Processor Management", "Providing Internet", "Device Management"},
-            {"Android", "Windows 7", "MacOS", "Ubuntu"},
-            {"Shell", "Command Prompt", "Kernel", "Compiler"},
-            {"MS-DOS", "Windows XP", "UNIX", "None of these"}
+            {"O(n)", "O(log n)", "O(n log n)", "O(1)"},
+            {"Bubble Sort", "Insertion Sort", "Merge Sort", "Quick Sort"},
+            {"Memory usage", "Execution time", "Growth rate", "Code size"},
+            {"Divide and Conquer", "Backtracking", "Greedy", "Dynamic Programming"},
+            {"O(n)", "O(log n)", "O(n^2)", "O(n log n)"}
     };
 
     private final String[] correctAnswers = {
-            "Linux",
-            "Providing Internet",
-            "Android",
-            "Kernel",
-            "UNIX"
+            "O(log n)",
+            "Quick Sort",
+            "Growth rate",
+            "Divide and Conquer",
+            "O(n^2)"
     };
 
     private TextView scoreTextView;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_operating_systems_screen);
+        setContentView(R.layout.activity_algorithms_screen);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -66,7 +63,7 @@ public class OperatingSystemsScreen extends AppCompatActivity {
             return insets;
         });
 
-        questionContainer = findViewById(R.id.questionContainer1);
+        questionContainer = findViewById(R.id.AlgorithmsQuestionContainer);
 
         createQuiz();
         addSubmitButton();
@@ -80,7 +77,6 @@ public class OperatingSystemsScreen extends AppCompatActivity {
     }
 
     private void addQuestion(String questionText, String[] optionsArray, String correctAnswer) {
-        // Add Question TextView
         TextView textView = new TextView(this);
         textView.setText(questionText);
         textView.setTextSize(18);
@@ -88,7 +84,6 @@ public class OperatingSystemsScreen extends AppCompatActivity {
         textView.setPadding(0, 24, 0, 8);
         questionContainer.addView(textView);
 
-        // Create RadioGroup
         RadioGroup radioGroup = new RadioGroup(this);
         radioGroup.setOrientation(RadioGroup.VERTICAL);
         radioGroup.setPadding(16, 0, 0, 8);
@@ -106,7 +101,6 @@ public class OperatingSystemsScreen extends AppCompatActivity {
 
         radioGroups.add(radioGroup);
         radioButtonsList.add(radioButtons);
-        optionsList.add(optionsArray);
         questionContainer.addView(radioGroup);
     }
 
@@ -150,15 +144,15 @@ public class OperatingSystemsScreen extends AppCompatActivity {
             String correctAnswer = correctAnswers[i];
 
             for (RadioButton rb : options) {
-                rb.setEnabled(false); // disable all after submit
+                rb.setEnabled(false);
                 String answer = rb.getText().toString();
 
                 if (answer.equals(correctAnswer)) {
-                    rb.setTextColor(Color.parseColor("#388E3C")); // green for correct
+                    rb.setTextColor(Color.parseColor("#388E3C"));
                 }
 
                 if (selectedId == rb.getId() && !answer.equals(correctAnswer)) {
-                    rb.setTextColor(Color.parseColor("#D32F2F")); // red if selected wrong
+                    rb.setTextColor(Color.parseColor("#D32F2F"));
                 }
 
                 if (selectedId == rb.getId() && answer.equals(correctAnswer)) {

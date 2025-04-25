@@ -13,6 +13,12 @@
         android:theme="@style/Theme.CareerMitra"
         tools:targetApi="31">
         <activity
+            android:name=".ProgrammingConceptsScreen"
+            android:exported="false" />
+        <activity
+            android:name=".AlgorithmsScreen"
+            android:exported="false" />
+        <activity
             android:name=".OperatingSystemsScreen"
             android:exported="false" />
         <activity
