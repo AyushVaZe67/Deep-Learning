@@ -11,27 +11,27 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class IntroScreen extends AppCompatActivity {
-    AppCompatButton goToMainScreen;
+public class MainScreen extends AppCompatActivity {
+
+    AppCompatButton gotoOperatingSystemScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_intro_screen);
+        setContentView(R.layout.activity_main_screen);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        gotoOperatingSystemScreen = findViewById(R.id.gotoOperatingSystemScreen);
 
-        goToMainScreen = findViewById(R.id.goToMainScreen);
-
-        goToMainScreen.setOnClickListener(new View.OnClickListener() {
+        gotoOperatingSystemScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(IntroScreen.this,MainScreen.class));
+                startActivity(new Intent(MainScreen.this,OperatingSystemsScreen.class));
             }
         });
     }
