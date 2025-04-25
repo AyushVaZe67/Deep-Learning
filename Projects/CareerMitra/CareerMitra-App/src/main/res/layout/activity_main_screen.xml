@@ -53,10 +53,10 @@
         android:background="@drawable/rounded_button"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button4"
+        android:id="@+id/goToSoftwareEngineeringScreen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button 4"
+        android:text="Software Engineering"
         android:layout_marginRight="100dp"
         android:layout_marginLeft="100dp"
         android:backgroundTint="#9C27B0"
@@ -67,10 +67,10 @@
         android:background="@drawable/rounded_button"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button5"
+        android:id="@+id/goToComputerNetworksScreen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button 5"
+        android:text="Computer Networks"
         android:layout_marginRight="100dp"
         android:layout_marginLeft="100dp"
         android:backgroundTint="#FFC107"

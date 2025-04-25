@@ -1,5 +1,6 @@
 package com.example.careermitra;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,8 +14,10 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainScreen extends AppCompatActivity {
 
-    AppCompatButton gotoOperatingSystemScreen,goToAlgorithmsScreen,goToProgrammingConcepts;
+    AppCompatButton gotoOperatingSystemScreen,goToAlgorithmsScreen,goToProgrammingConcepts,
+            goToSoftwareEngineeringScreen,goToComputerNetworksScreen;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +32,8 @@ public class MainScreen extends AppCompatActivity {
         gotoOperatingSystemScreen = findViewById(R.id.gotoOperatingSystemScreen);
         goToAlgorithmsScreen = findViewById(R.id.goToAlgorithmsScreen);
         goToProgrammingConcepts = findViewById(R.id.goToProgrammingConcepts);
+        goToSoftwareEngineeringScreen = findViewById(R.id.goToSoftwareEngineeringScreen);
+        goToComputerNetworksScreen = findViewById(R.id.goToComputerNetworksScreen);
 
         gotoOperatingSystemScreen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +53,20 @@ public class MainScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainScreen.this,ProgrammingConceptsScreen.class));
+            }
+        });
+
+        goToSoftwareEngineeringScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainScreen.this,SoftwareEngineeringScreen.class));
+            }
+        });
+
+        goToComputerNetworksScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainScreen.this, ComputerNetworksScreen.class));
             }
         });
     }

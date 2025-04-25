@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:orientation="vertical"
-    android:background="#FFFFFF"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProgrammingConceptsScreen">
+    tools:context=".SoftwareEngineeringScreen">
 
-    <ScrollView
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#F5F5F5">
 
         <LinearLayout
-            android:id="@+id/ProgrammingConceptsQuestionContainer"
+            android:id="@+id/SoftwareEngineeringQuestionContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

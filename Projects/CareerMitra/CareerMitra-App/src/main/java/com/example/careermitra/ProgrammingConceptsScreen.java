@@ -1,6 +1,9 @@
 package com.example.careermitra;
 
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -16,6 +19,8 @@ public class ProgrammingConceptsScreen extends AppCompatActivity {
 
     private LinearLayout questionContainer;
     private ArrayList<RadioGroup> radioGroups = new ArrayList<>();
+    private Button submitButton;
+    private TextView resultTextView;
 
     private String[] questions = {
             "1. What does JVM stand for?",
@@ -59,12 +64,22 @@ public class ProgrammingConceptsScreen extends AppCompatActivity {
     }
 
     private void addQuestion(String questionText, String[] optionsArray) {
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setPadding(30, 30, 30, 30);
+        card.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+        card.setBackground(createCardBackground());
+
         // Question Text
         TextView textView = new TextView(this);
         textView.setText(questionText);
         textView.setTextSize(18);
-        textView.setPadding(0, 24, 0, 8);
-        questionContainer.addView(textView);
+        textView.setTextColor(Color.parseColor("#0D47A1")); // dark blue
+        textView.setPadding(0, 0, 0, 20);
+        card.addView(textView);
 
         // Options
         RadioGroup radioGroup = new RadioGroup(this);
@@ -74,18 +89,38 @@ public class ProgrammingConceptsScreen extends AppCompatActivity {
             RadioButton radioButton = new RadioButton(this);
             radioButton.setText(option);
             radioButton.setTextSize(16);
+            radioButton.setTextColor(Color.parseColor("#37474F")); // dark gray
             radioGroup.addView(radioButton);
         }
 
         radioGroups.add(radioGroup);
-        questionContainer.addView(radioGroup);
+        card.addView(radioGroup);
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.setMargins(0, 20, 0, 20);
+
+        questionContainer.addView(card, layoutParams);
+    }
+
+    private GradientDrawable createCardBackground() {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setCornerRadius(30);
+        drawable.setColor(Color.parseColor("#FFFFFF"));
+        drawable.setStroke(3, Color.parseColor("#90CAF9")); // Light blue stroke
+        return drawable;
     }
 
     private void addSubmitButton() {
-        Button submitButton = new Button(this);
+        submitButton = new Button(this);
         submitButton.setText("Submit Answers");
+        submitButton.setTextSize(18);
+        submitButton.setTextColor(Color.WHITE);
+        submitButton.setBackgroundColor(Color.parseColor("#0D47A1")); // Dark blue
         submitButton.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
         submitButton.setPadding(0, 32, 0, 32);
@@ -109,6 +144,9 @@ public class ProgrammingConceptsScreen extends AppCompatActivity {
 
                 if (selectedAnswer.equals(correctAnswers[i])) {
                     score++;
+                    selected.setTextColor(Color.parseColor("#2E7D32")); // Green for correct
+                } else {
+                    selected.setTextColor(Color.parseColor("#D32F2F")); // Red for wrong
                 }
 
                 result.append("Q").append(i + 1).append(": Your Answer: ").append(selectedAnswer)
@@ -118,15 +156,27 @@ public class ProgrammingConceptsScreen extends AppCompatActivity {
                 result.append("Q").append(i + 1).append(": No Answer\nCorrect Answer: ")
                         .append(correctAnswers[i]).append("\n\n");
             }
+
+            // Disable RadioGroup after submission
+            for (int j = 0; j < group.getChildCount(); j++) {
+                group.getChildAt(j).setEnabled(false);
+            }
         }
 
-        result.append("Final Score: ").append(score).append("/").append(questions.length);
+        result.append("\nFinal Score: ").append(score).append("/").append(questions.length);
 
-        // Show the result below submit button
-        TextView resultTextView = new TextView(this);
+        // Remove old result if already there
+        if (resultTextView != null) {
+            questionContainer.removeView(resultTextView);
+        }
+
+        // Show result
+        resultTextView = new TextView(this);
         resultTextView.setText(result.toString());
-        resultTextView.setTextSize(16);
-        resultTextView.setPadding(0, 40, 0, 40);
+        resultTextView.setTextSize(18);
+        resultTextView.setTextColor(Color.parseColor("#0D47A1"));
+        resultTextView.setGravity(Gravity.CENTER);
+        resultTextView.setPadding(20, 40, 20, 40);
 
         questionContainer.addView(resultTextView);
     }
