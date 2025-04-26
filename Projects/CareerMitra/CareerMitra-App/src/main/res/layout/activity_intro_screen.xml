@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="@color/primary_light_blue"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".IntroScreen">
@@ -16,6 +16,8 @@
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:gravity="center"
+        android:textColor="@color/white"
+        android:background="@color/button_blue"
         android:layout_height="wrap_content"
         android:text="NEXT SCREEN"
         android:id="@+id/goToMainScreen"
