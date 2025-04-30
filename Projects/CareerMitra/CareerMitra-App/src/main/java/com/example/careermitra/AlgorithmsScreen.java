@@ -1,5 +1,6 @@
 package com.example.careermitra;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -144,15 +145,15 @@ public class AlgorithmsScreen extends AppCompatActivity {
             String correctAnswer = correctAnswers[i];
 
             for (RadioButton rb : options) {
-                rb.setEnabled(false);
+                rb.setEnabled(false); // Disable all after submit
                 String answer = rb.getText().toString();
 
                 if (answer.equals(correctAnswer)) {
-                    rb.setTextColor(Color.parseColor("#388E3C"));
+                    rb.setTextColor(Color.parseColor("#388E3C")); // Green
                 }
 
                 if (selectedId == rb.getId() && !answer.equals(correctAnswer)) {
-                    rb.setTextColor(Color.parseColor("#D32F2F"));
+                    rb.setTextColor(Color.parseColor("#D32F2F")); // Red
                 }
 
                 if (selectedId == rb.getId() && answer.equals(correctAnswer)) {
@@ -161,7 +162,15 @@ public class AlgorithmsScreen extends AppCompatActivity {
             }
         }
 
-        scoreTextView.setText("You scored " + score + " out of " + questions.length);
+        String scoreText = "You scored " + score + " out of " + questions.length;
+        scoreTextView.setText(scoreText);
         Toast.makeText(this, "Score: " + score + "/" + questions.length, Toast.LENGTH_SHORT).show();
+
+        // Send score back to MainScreen
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("algorithms_score", score + "/" + questions.length);
+        setResult(RESULT_OK, resultIntent);
+        finish(); // Finish and return to MainScreen
     }
+
 }

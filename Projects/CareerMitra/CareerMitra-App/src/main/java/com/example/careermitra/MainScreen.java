@@ -2,7 +2,6 @@ package com.example.careermitra;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.media.MediaCommunicationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -16,12 +15,11 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainScreen extends AppCompatActivity {
 
-    AppCompatButton gotoOperatingSystemScreen,goToAlgorithmsScreen,goToProgrammingConcepts,
-            goToSoftwareEngineeringScreen,goToComputerNetworksScreen,goToElectronicsSubjectsScreen,
-            goToComputerArchitectureScreen,goToMathematicsScreen,goToCommunicationSkills;
+    AppCompatButton gotoOperatingSystemScreen, goToAlgorithmsScreen, goToProgrammingConcepts,
+            goToSoftwareEngineeringScreen, goToComputerNetworksScreen, goToElectronicsSubjectsScreen,
+            goToComputerArchitectureScreen, goToMathematicsScreen, goToCommunicationSkills;
 
-    TextView osScore;
-
+    TextView osScore, algorithmsScore;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -29,6 +27,7 @@ public class MainScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main_screen);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -36,6 +35,7 @@ public class MainScreen extends AppCompatActivity {
         });
 
         osScore = findViewById(R.id.osScoreMainScreen);
+        algorithmsScore = findViewById(R.id.algorithmsScoreMainScreen);  // Assuming you added a TextView for Algorithms
 
         gotoOperatingSystemScreen = findViewById(R.id.gotoOperatingSystemScreen);
         goToAlgorithmsScreen = findViewById(R.id.goToAlgorithmsScreen);
@@ -55,25 +55,25 @@ public class MainScreen extends AppCompatActivity {
             }
         });
 
-
         goToAlgorithmsScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainScreen.this,AlgorithmsScreen.class));
+                Intent intent = new Intent(MainScreen.this, AlgorithmsScreen.class);
+                startActivityForResult(intent, 2); // Request code 2 for algorithms
             }
         });
 
         goToProgrammingConcepts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainScreen.this,ProgrammingConceptsScreen.class));
+                startActivity(new Intent(MainScreen.this, ProgrammingConceptsScreen.class));
             }
         });
 
         goToSoftwareEngineeringScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainScreen.this,SoftwareEngineeringScreen.class));
+                startActivity(new Intent(MainScreen.this, SoftwareEngineeringScreen.class));
             }
         });
 
@@ -117,12 +117,18 @@ public class MainScreen extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            String score = data.getStringExtra("os_score");
-            if (score != null && osScore != null) {
-                osScore.setText("Score: " + score);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+                String osScoreText = data.getStringExtra("os_score");
+                if (osScoreText != null && osScore != null) {
+                    osScore.setText("Operating System Score: " + osScoreText);
+                }
+            } else if (requestCode == 2) {
+                String algorithmsScoreText = data.getStringExtra("algorithms_score");
+                if (algorithmsScoreText != null && algorithmsScore != null) {
+                    algorithmsScore.setText("Algorithms Score: " + algorithmsScoreText);
+                }
             }
         }
     }
-
 }
