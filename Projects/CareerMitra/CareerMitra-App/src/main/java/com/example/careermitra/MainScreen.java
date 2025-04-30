@@ -120,7 +120,7 @@ public class MainScreen extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             String score = data.getStringExtra("os_score");
             if (score != null && osScore != null) {
-                osScore.setText("Operating Systems Quiz Score: " + score);
+                osScore.setText("Score: " + score);
             }
         }
     }

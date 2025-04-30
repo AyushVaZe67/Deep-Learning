@@ -9,147 +9,288 @@
     android:layout_height="match_parent"
     tools:context=".MainScreen">
 
-    <LinearLayout
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="142dp"
-        android:layout_marginBottom="8dp"
-        android:paddingHorizontal="16dp">
+        android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/gotoOperatingSystemScreen"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Operating Systems"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#4CAF50"
-            android:elevation="4dp"
-            android:padding="12dp"
-            android:background="@drawable/rounded_button"
-            android:layout_marginEnd="16dp"/>
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <TextView
-            android:id="@+id/osScoreMainScreen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textColor="#000000"
-            android:text="Score: Not Attempted" />
-    </LinearLayout>
+            <!-- First Row: Button and TextView -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
 
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/gotoOperatingSystemScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Operating Systems"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="#4CAF50"
+                    android:elevation="4dp"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginEnd="8dp"/>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/goToAlgorithmsScreen"
-        android:layout_marginRight="100dp"
-        android:layout_marginLeft="100dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Algorithms"
-        android:backgroundTint="#2196F3"
-        android:textColor="#FFFFFF"
-        android:elevation="4dp"
-        android:layout_marginTop="12dp"
-        android:padding="12dp"
-        android:background="@drawable/rounded_button"/>
+                <TextView
+                    android:id="@+id/osScoreMainScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:text="Score: Not Attempted" />
+            </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/goToProgrammingConcepts"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Programming Concepts"
-        android:backgroundTint="#FF5722"
-        android:layout_marginRight="100dp"
-        android:layout_marginLeft="100dp"
-        android:textColor="#FFFFFF"
-        android:elevation="4dp"
-        android:layout_marginTop="12dp"
-        android:padding="12dp"
-        android:background="@drawable/rounded_button"/>
+            <!-- Second Row: Button and TextView -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/goToSoftwareEngineeringScreen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Software Engineering"
-        android:layout_marginRight="100dp"
-        android:layout_marginLeft="100dp"
-        android:backgroundTint="#9C27B0"
-        android:textColor="#FFFFFF"
-        android:elevation="4dp"
-        android:layout_marginTop="12dp"
-        android:padding="12dp"
-        android:background="@drawable/rounded_button"/>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/goToAlgorithmsScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Algorithms"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="#2196F3"
+                    android:elevation="4dp"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginEnd="8dp"/>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/goToComputerNetworksScreen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Computer Networks"
-        android:layout_marginRight="100dp"
-        android:layout_marginLeft="100dp"
-        android:backgroundTint="#FFC107"
-        android:textColor="#000000"
-        android:elevation="4dp"
-        android:layout_marginTop="12dp"
-        android:padding="12dp"
-        android:background="@drawable/rounded_button"/>
+                <TextView
+                    android:id="@+id/algorithmsScoreMainScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:text="Score: Not Attempted" />
+            </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/goToElectronicsSubjectsScreen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Electronics Subjects"
-        android:layout_marginRight="100dp"
-        android:layout_marginLeft="100dp"
-        android:backgroundTint="#11FF00"
-        android:textColor="#000000"
-        android:elevation="4dp"
-        android:layout_marginTop="12dp"
-        android:padding="12dp"
-        android:background="@drawable/rounded_button"/>
+            <!-- Third Row: Button and TextView -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/goToComputerArchitectureScreen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Computer Architecture"
-        android:layout_marginRight="100dp"
-        android:layout_marginLeft="100dp"
-        android:backgroundTint="#0040FF"
-        android:textColor="#000000"
-        android:elevation="4dp"
-        android:layout_marginTop="12dp"
-        android:padding="12dp"
-        android:background="@drawable/rounded_button"/>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/goToProgrammingConcepts"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Programming Concepts"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="#FF5722"
+                    android:elevation="4dp"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginEnd="8dp"/>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/goToMathematicsScreen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Mathematics"
-        android:layout_marginRight="100dp"
-        android:layout_marginLeft="100dp"
-        android:backgroundTint="#FF0000"
-        android:textColor="#000000"
-        android:elevation="4dp"
-        android:layout_marginTop="12dp"
-        android:padding="12dp"
-        android:background="@drawable/rounded_button"/>
+                <TextView
+                    android:id="@+id/programmingConceptsScoreMainScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:text="Score: Not Attempted" />
+            </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/goToCommunicationSkills"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Communication Skills"
-        android:layout_marginRight="100dp"
-        android:layout_marginLeft="100dp"
-        android:backgroundTint="#00FFE1"
-        android:textColor="#000000"
-        android:elevation="4dp"
-        android:layout_marginTop="12dp"
-        android:padding="12dp"
-        android:background="@drawable/rounded_button"/>
+            <!-- Fourth Row: Button and TextView -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/goToSoftwareEngineeringScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Software Engineering"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="#9C27B0"
+                    android:elevation="4dp"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/softwareEngineeringScoreMainScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:text="Score: Not Attempted" />
+            </LinearLayout>
+
+            <!-- Fifth Row: Button and TextView -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/goToComputerNetworksScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Computer Networks"
+                    android:textColor="#000000"
+                    android:backgroundTint="#FFC107"
+                    android:elevation="4dp"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/computerNetworksScoreMainScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:text="Score: Not Attempted" />
+            </LinearLayout>
+
+            <!-- Sixth Row: Button and TextView -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/goToElectronicsSubjectsScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Electronics Subjects"
+                    android:textColor="#000000"
+                    android:backgroundTint="#11FF00"
+                    android:elevation="4dp"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/electronicsSubjectsScoreMainScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:text="Score: Not Attempted" />
+            </LinearLayout>
+
+            <!-- Seventh Row: Button and TextView -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/goToComputerArchitectureScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Computer Architecture"
+                    android:textColor="#000000"
+                    android:backgroundTint="#0040FF"
+                    android:elevation="4dp"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/computerArchitectureScoreMainScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:text="Score: Not Attempted" />
+            </LinearLayout>
+
+            <!-- Eighth Row: Button and TextView -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/goToMathematicsScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Mathematics"
+                    android:textColor="#000000"
+                    android:backgroundTint="#FF0000"
+                    android:elevation="4dp"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/mathematicsScoreMainScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:text="Score: Not Attempted" />
+            </LinearLayout>
+
+            <!-- Ninth Row: Button and TextView -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/goToCommunicationSkills"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Communication Skills"
+                    android:textColor="#000000"
+                    android:backgroundTint="#00FFE1"
+                    android:elevation="4dp"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/communicationSkillsScoreMainScreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:text="Score: Not Attempted" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
