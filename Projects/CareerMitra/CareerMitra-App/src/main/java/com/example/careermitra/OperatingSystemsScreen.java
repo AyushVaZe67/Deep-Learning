@@ -1,6 +1,7 @@
 package com.example.careermitra;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -154,11 +155,11 @@ public class OperatingSystemsScreen extends AppCompatActivity {
                 String answer = rb.getText().toString();
 
                 if (answer.equals(correctAnswer)) {
-                    rb.setTextColor(Color.parseColor("#388E3C")); // green for correct
+                    rb.setTextColor(Color.parseColor("#388E3C")); // green
                 }
 
                 if (selectedId == rb.getId() && !answer.equals(correctAnswer)) {
-                    rb.setTextColor(Color.parseColor("#D32F2F")); // red if selected wrong
+                    rb.setTextColor(Color.parseColor("#D32F2F")); // red
                 }
 
                 if (selectedId == rb.getId() && answer.equals(correctAnswer)) {
@@ -167,7 +168,16 @@ public class OperatingSystemsScreen extends AppCompatActivity {
             }
         }
 
-        scoreTextView.setText("You scored " + score + " out of " + questions.length);
+        String scoreText = "You scored " + score + " out of " + questions.length;
+        scoreTextView.setText(scoreText);
         Toast.makeText(this, "Score: " + score + "/" + questions.length, Toast.LENGTH_SHORT).show();
+
+        // Send score back to MainScreen
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("os_score", score + "/" + questions.length);
+        setResult(RESULT_OK, resultIntent);
+        finish(); // Finish and return
     }
 }
+
+

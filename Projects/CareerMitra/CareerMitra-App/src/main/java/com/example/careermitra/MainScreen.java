@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.MediaCommunicationManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +20,9 @@ public class MainScreen extends AppCompatActivity {
             goToSoftwareEngineeringScreen,goToComputerNetworksScreen,goToElectronicsSubjectsScreen,
             goToComputerArchitectureScreen,goToMathematicsScreen,goToCommunicationSkills;
 
+    TextView osScore;
+
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,8 @@ public class MainScreen extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        osScore = findViewById(R.id.osScoreMainScreen);
 
         gotoOperatingSystemScreen = findViewById(R.id.gotoOperatingSystemScreen);
         goToAlgorithmsScreen = findViewById(R.id.goToAlgorithmsScreen);
@@ -44,9 +50,11 @@ public class MainScreen extends AppCompatActivity {
         gotoOperatingSystemScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainScreen.this,OperatingSystemsScreen.class));
+                Intent intent = new Intent(MainScreen.this, OperatingSystemsScreen.class);
+                startActivityForResult(intent, 1); // Request code 1
             }
         });
+
 
         goToAlgorithmsScreen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,4 +112,17 @@ public class MainScreen extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            String score = data.getStringExtra("os_score");
+            if (score != null && osScore != null) {
+                osScore.setText("Operating Systems Quiz Score: " + score);
+            }
+        }
+    }
+
 }
