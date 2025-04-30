@@ -2,6 +2,7 @@ package com.example.careermitra;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.MediaCommunicationManager;
 import android.os.Bundle;
 import android.view.View;
 
@@ -15,7 +16,8 @@ import androidx.core.view.WindowInsetsCompat;
 public class MainScreen extends AppCompatActivity {
 
     AppCompatButton gotoOperatingSystemScreen,goToAlgorithmsScreen,goToProgrammingConcepts,
-            goToSoftwareEngineeringScreen,goToComputerNetworksScreen;
+            goToSoftwareEngineeringScreen,goToComputerNetworksScreen,goToElectronicsSubjectsScreen,
+            goToComputerArchitectureScreen,goToMathematicsScreen,goToCommunicationSkills;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -34,6 +36,10 @@ public class MainScreen extends AppCompatActivity {
         goToProgrammingConcepts = findViewById(R.id.goToProgrammingConcepts);
         goToSoftwareEngineeringScreen = findViewById(R.id.goToSoftwareEngineeringScreen);
         goToComputerNetworksScreen = findViewById(R.id.goToComputerNetworksScreen);
+        goToElectronicsSubjectsScreen = findViewById(R.id.goToElectronicsSubjectsScreen);
+        goToComputerArchitectureScreen = findViewById(R.id.goToComputerArchitectureScreen);
+        goToMathematicsScreen = findViewById(R.id.goToMathematicsScreen);
+        goToCommunicationSkills = findViewById(R.id.goToCommunicationSkills);
 
         gotoOperatingSystemScreen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +73,34 @@ public class MainScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainScreen.this, ComputerNetworksScreen.class));
+            }
+        });
+
+        goToElectronicsSubjectsScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainScreen.this, ElectronicsSubjectsScreen.class));
+            }
+        });
+
+        goToComputerArchitectureScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainScreen.this, ComputerArchitectureScreen.class));
+            }
+        });
+
+        goToMathematicsScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainScreen.this, MathematicsScreen.class));
+            }
+        });
+
+        goToCommunicationSkills.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainScreen.this, CommunicationSkillsScreen.class));
             }
         });
     }
