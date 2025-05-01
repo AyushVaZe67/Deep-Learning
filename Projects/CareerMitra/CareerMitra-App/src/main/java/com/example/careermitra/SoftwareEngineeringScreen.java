@@ -1,5 +1,6 @@
 package com.example.careermitra;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -63,7 +64,7 @@ public class SoftwareEngineeringScreen extends AppCompatActivity {
         TextView textView = new TextView(this);
         textView.setText(questionText);
         textView.setTextSize(18);
-        textView.setTextColor(getResources().getColor(R.color.text_dark_blue)); // Using colors.xml
+        textView.setTextColor(getResources().getColor(R.color.text_dark_blue));
         textView.setPadding(20, 24, 20, 8);
         questionContainer.addView(textView);
 
@@ -102,7 +103,6 @@ public class SoftwareEngineeringScreen extends AppCompatActivity {
 
     private void evaluateQuiz() {
         int score = 0;
-        StringBuilder result = new StringBuilder();
 
         for (int i = 0; i < radioGroups.size(); i++) {
             RadioGroup group = radioGroups.get(i);
@@ -115,25 +115,13 @@ public class SoftwareEngineeringScreen extends AppCompatActivity {
                 if (selectedAnswer.equals(correctAnswers[i])) {
                     score++;
                 }
-
-                result.append("Q").append(i + 1).append(": Your Answer: ").append(selectedAnswer)
-                        .append("\nCorrect Answer: ").append(correctAnswers[i]).append("\n\n");
-
-            } else {
-                result.append("Q").append(i + 1).append(": No Answer\nCorrect Answer: ")
-                        .append(correctAnswers[i]).append("\n\n");
             }
         }
 
-        result.append("Final Score: ").append(score).append("/").append(questions.length);
-
-        // Show the result below submit button
-        TextView resultTextView = new TextView(this);
-        resultTextView.setText(result.toString());
-        resultTextView.setTextSize(16);
-        resultTextView.setPadding(20, 40, 20, 40);
-        resultTextView.setTextColor(getResources().getColor(R.color.primary_dark_blue));
-
-        questionContainer.addView(resultTextView);
+        // Send score back to MainScreen
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("se_score", score + "/" + questions.length);
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 }

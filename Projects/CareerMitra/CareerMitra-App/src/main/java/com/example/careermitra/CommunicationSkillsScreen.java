@@ -1,5 +1,7 @@
 package com.example.careermitra;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ public class CommunicationSkillsScreen extends AppCompatActivity {
 
     private LinearLayout questionContainer;
     private ArrayList<RadioGroup> radioGroups = new ArrayList<>();
+    private ArrayList<RadioButton[]> radioButtonsList = new ArrayList<>();
     private TextView resultTextView;
 
     private String[] questions = {
@@ -73,14 +76,17 @@ public class CommunicationSkillsScreen extends AppCompatActivity {
         radioGroup.setOrientation(RadioGroup.VERTICAL);
         radioGroup.setPadding(20, 12, 20, 24);
 
-        for (String option : optionsArray) {
+        RadioButton[] radioButtons = new RadioButton[optionsArray.length];
+        for (int i = 0; i < optionsArray.length; i++) {
             RadioButton radioButton = new RadioButton(this);
-            radioButton.setText(option);
+            radioButton.setText(optionsArray[i]);
             radioButton.setTextSize(16);
             radioButton.setTextColor(getResources().getColor(R.color.text_dark_gray));
             radioGroup.addView(radioButton);
+            radioButtons[i] = radioButton;
         }
 
+        radioButtonsList.add(radioButtons);
         radioGroups.add(radioGroup);
         questionContainer.addView(radioGroup);
     }
@@ -117,28 +123,37 @@ public class CommunicationSkillsScreen extends AppCompatActivity {
         for (int i = 0; i < radioGroups.size(); i++) {
             RadioGroup group = radioGroups.get(i);
             int selectedId = group.getCheckedRadioButtonId();
+            RadioButton[] options = radioButtonsList.get(i);
+            String correctAnswer = correctAnswers[i];
 
-            if (selectedId != -1) {
-                RadioButton selected = findViewById(selectedId);
-                String selectedAnswer = selected.getText().toString();
+            for (RadioButton rb : options) {
+                rb.setEnabled(false); // Disable all after submit
 
-                if (selectedAnswer.equals(correctAnswers[i])) {
-                    score++;
+                String answer = rb.getText().toString();
+
+                if (answer.equals(correctAnswer)) {
+                    rb.setTextColor(Color.parseColor("#388E3C")); // Green for correct answers
                 }
 
-                result.append("Q").append(i + 1).append(": Your Answer: ").append(selectedAnswer)
-                        .append("\nCorrect Answer: ").append(correctAnswers[i]).append("\n\n");
+                if (selectedId == rb.getId() && !answer.equals(correctAnswer)) {
+                    rb.setTextColor(Color.parseColor("#D32F2F")); // Red for incorrect answers
+                }
 
-            } else {
-                result.append("Q").append(i + 1).append(": No Answer\nCorrect Answer: ")
-                        .append(correctAnswers[i]).append("\n\n");
+                if (selectedId == rb.getId() && answer.equals(correctAnswer)) {
+                    score++;
+                }
             }
         }
 
-        result.append("Final Score: ").append(score).append("/").append(questions.length);
+        String scoreText = "You scored " + score + " out of " + questions.length;
+        resultTextView.setText(scoreText);
 
-        resultTextView.setText(result.toString());
+        Toast.makeText(this, "Score: " + score + "/" + questions.length, Toast.LENGTH_SHORT).show();
 
-        Toast.makeText(this, "Quiz Submitted!", Toast.LENGTH_SHORT).show();
+        // Send the score back to MainScreen
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("comm_score", score + "/" + questions.length);
+        setResult(RESULT_OK, resultIntent);
+        finish(); // Finish and return to MainScreen
     }
 }

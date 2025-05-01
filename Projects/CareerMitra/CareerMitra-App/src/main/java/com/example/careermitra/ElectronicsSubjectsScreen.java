@@ -1,5 +1,6 @@
 package com.example.careermitra;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -138,6 +139,12 @@ public class ElectronicsSubjectsScreen extends AppCompatActivity {
         result.append("Final Score: ").append(score).append("/").append(questions.length);
 
         resultTextView.setText(result.toString());
+
+        // Send the score back to MainScreen
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("electronics_score", score + "/" + questions.length);
+        setResult(RESULT_OK, resultIntent);
+        finish();
 
         Toast.makeText(this, "Quiz Submitted!", Toast.LENGTH_SHORT).show();
     }

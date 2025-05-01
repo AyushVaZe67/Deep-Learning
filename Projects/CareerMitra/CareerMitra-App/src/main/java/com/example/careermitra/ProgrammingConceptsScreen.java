@@ -1,7 +1,8 @@
 package com.example.careermitra;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -10,19 +11,24 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 
 public class ProgrammingConceptsScreen extends AppCompatActivity {
 
     private LinearLayout questionContainer;
-    private ArrayList<RadioGroup> radioGroups = new ArrayList<>();
-    private Button submitButton;
-    private TextView resultTextView;
+    private final ArrayList<RadioGroup> radioGroups = new ArrayList<>();
+    private final ArrayList<String[]> optionsList = new ArrayList<>();
+    private final ArrayList<RadioButton[]> radioButtonsList = new ArrayList<>();
 
-    private String[] questions = {
+    private final String[] questions = {
             "1. What does JVM stand for?",
             "2. Which language is primarily used for developing Android apps?",
             "3. What is the purpose of a compiler?",
@@ -30,7 +36,7 @@ public class ProgrammingConceptsScreen extends AppCompatActivity {
             "5. What is the value of boolean variable after 'boolean a = true && false;'?"
     };
 
-    private String[][] options = {
+    private final String[][] options = {
             {"Java Virtual Machine", "Java Variable Model", "Joint Virtual Mechanism", "Java Vendor Model"},
             {"Python", "Java", "C#", "Swift"},
             {"Execute the program", "Translate code to machine code", "Design the UI", "Manage memory"},
@@ -38,7 +44,7 @@ public class ProgrammingConceptsScreen extends AppCompatActivity {
             {"true", "false", "null", "error"}
     };
 
-    private String[] correctAnswers = {
+    private final String[] correctAnswers = {
             "Java Virtual Machine",
             "Java",
             "Translate code to machine code",
@@ -46,138 +52,128 @@ public class ProgrammingConceptsScreen extends AppCompatActivity {
             "false"
     };
 
+    private TextView scoreTextView;
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_programming_concepts_screen);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         questionContainer = findViewById(R.id.ProgrammingConceptsQuestionContainer);
 
         createQuiz();
         addSubmitButton();
+        addScoreView();
     }
 
     private void createQuiz() {
         for (int i = 0; i < questions.length; i++) {
-            addQuestion(questions[i], options[i]);
+            addQuestion(questions[i], options[i], correctAnswers[i]);
         }
     }
 
-    private void addQuestion(String questionText, String[] optionsArray) {
-        LinearLayout card = new LinearLayout(this);
-        card.setOrientation(LinearLayout.VERTICAL);
-        card.setPadding(30, 30, 30, 30);
-        card.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        card.setBackground(createCardBackground());
-
-        // Question Text
+    private void addQuestion(String questionText, String[] optionsArray, String correctAnswer) {
         TextView textView = new TextView(this);
         textView.setText(questionText);
         textView.setTextSize(18);
-        textView.setTextColor(Color.parseColor("#0D47A1")); // dark blue
-        textView.setPadding(0, 0, 0, 20);
-        card.addView(textView);
+        textView.setTextColor(getColor(android.R.color.black));
+        textView.setPadding(0, 24, 0, 8);
+        questionContainer.addView(textView);
 
-        // Options
         RadioGroup radioGroup = new RadioGroup(this);
         radioGroup.setOrientation(RadioGroup.VERTICAL);
+        radioGroup.setPadding(16, 0, 0, 8);
 
-        for (String option : optionsArray) {
+        RadioButton[] radioButtons = new RadioButton[optionsArray.length];
+
+        for (int i = 0; i < optionsArray.length; i++) {
             RadioButton radioButton = new RadioButton(this);
-            radioButton.setText(option);
+            radioButton.setText(optionsArray[i]);
             radioButton.setTextSize(16);
-            radioButton.setTextColor(Color.parseColor("#37474F")); // dark gray
+            radioButton.setTextColor(getColor(android.R.color.darker_gray));
             radioGroup.addView(radioButton);
+            radioButtons[i] = radioButton;
         }
 
         radioGroups.add(radioGroup);
-        card.addView(radioGroup);
-
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-        layoutParams.setMargins(0, 20, 0, 20);
-
-        questionContainer.addView(card, layoutParams);
-    }
-
-    private GradientDrawable createCardBackground() {
-        GradientDrawable drawable = new GradientDrawable();
-        drawable.setCornerRadius(30);
-        drawable.setColor(Color.parseColor("#FFFFFF"));
-        drawable.setStroke(3, Color.parseColor("#90CAF9")); // Light blue stroke
-        return drawable;
+        radioButtonsList.add(radioButtons);
+        optionsList.add(optionsArray);
+        questionContainer.addView(radioGroup);
     }
 
     private void addSubmitButton() {
-        submitButton = new Button(this);
+        Button submitButton = new Button(this);
         submitButton.setText("Submit Answers");
-        submitButton.setTextSize(18);
-        submitButton.setTextColor(Color.WHITE);
-        submitButton.setBackgroundColor(Color.parseColor("#0D47A1")); // Dark blue
-        submitButton.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
+        submitButton.setTextSize(16);
+        submitButton.setBackgroundColor(getColor(android.R.color.holo_blue_light));
+        submitButton.setTextColor(getColor(android.R.color.white));
+        submitButton.setPadding(24, 16, 24, 16);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        submitButton.setPadding(0, 32, 0, 32);
+        );
+        params.topMargin = 40;
+        params.gravity = Gravity.CENTER_HORIZONTAL;
+        submitButton.setLayoutParams(params);
 
         submitButton.setOnClickListener(view -> evaluateQuiz());
 
         questionContainer.addView(submitButton);
     }
 
+    private void addScoreView() {
+        scoreTextView = new TextView(this);
+        scoreTextView.setTextSize(18);
+        scoreTextView.setTextColor(Color.BLACK);
+        scoreTextView.setPadding(0, 32, 0, 32);
+        scoreTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        questionContainer.addView(scoreTextView);
+    }
+
     private void evaluateQuiz() {
         int score = 0;
-        StringBuilder result = new StringBuilder();
 
         for (int i = 0; i < radioGroups.size(); i++) {
             RadioGroup group = radioGroups.get(i);
             int selectedId = group.getCheckedRadioButtonId();
+            RadioButton[] options = radioButtonsList.get(i);
+            String correctAnswer = correctAnswers[i];
 
-            if (selectedId != -1) {
-                RadioButton selected = findViewById(selectedId);
-                String selectedAnswer = selected.getText().toString();
+            for (RadioButton rb : options) {
+                rb.setEnabled(false);
+                String answer = rb.getText().toString();
 
-                if (selectedAnswer.equals(correctAnswers[i])) {
-                    score++;
-                    selected.setTextColor(Color.parseColor("#2E7D32")); // Green for correct
-                } else {
-                    selected.setTextColor(Color.parseColor("#D32F2F")); // Red for wrong
+                if (answer.equals(correctAnswer)) {
+                    rb.setTextColor(Color.parseColor("#388E3C"));
                 }
 
-                result.append("Q").append(i + 1).append(": Your Answer: ").append(selectedAnswer)
-                        .append("\nCorrect Answer: ").append(correctAnswers[i]).append("\n\n");
+                if (selectedId == rb.getId() && !answer.equals(correctAnswer)) {
+                    rb.setTextColor(Color.parseColor("#D32F2F"));
+                }
 
-            } else {
-                result.append("Q").append(i + 1).append(": No Answer\nCorrect Answer: ")
-                        .append(correctAnswers[i]).append("\n\n");
-            }
-
-            // Disable RadioGroup after submission
-            for (int j = 0; j < group.getChildCount(); j++) {
-                group.getChildAt(j).setEnabled(false);
+                if (selectedId == rb.getId() && answer.equals(correctAnswer)) {
+                    score++;
+                }
             }
         }
 
-        result.append("\nFinal Score: ").append(score).append("/").append(questions.length);
+        String scoreText = "You scored " + score + " out of " + questions.length;
+        scoreTextView.setText(scoreText);
+        Toast.makeText(this, "Score: " + score + "/" + questions.length, Toast.LENGTH_SHORT).show();
 
-        // Remove old result if already there
-        if (resultTextView != null) {
-            questionContainer.removeView(resultTextView);
-        }
-
-        // Show result
-        resultTextView = new TextView(this);
-        resultTextView.setText(result.toString());
-        resultTextView.setTextSize(18);
-        resultTextView.setTextColor(Color.parseColor("#0D47A1"));
-        resultTextView.setGravity(Gravity.CENTER);
-        resultTextView.setPadding(20, 40, 20, 40);
-
-        questionContainer.addView(resultTextView);
+        // Send result back
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("programming_score", score + "/" + questions.length);
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 }

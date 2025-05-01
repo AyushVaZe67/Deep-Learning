@@ -1,5 +1,6 @@
 package com.example.careermitra;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -112,8 +113,8 @@ public class ComputerArchitectureScreen extends AppCompatActivity {
 
     private void evaluateQuiz() {
         int score = 0;
-        StringBuilder result = new StringBuilder();
 
+        // Loop through all the questions and calculate the score
         for (int i = 0; i < radioGroups.size(); i++) {
             RadioGroup group = radioGroups.get(i);
             int selectedId = group.getCheckedRadioButtonId();
@@ -125,20 +126,13 @@ public class ComputerArchitectureScreen extends AppCompatActivity {
                 if (selectedAnswer.equals(correctAnswers[i])) {
                     score++;
                 }
-
-                result.append("Q").append(i + 1).append(": Your Answer: ").append(selectedAnswer)
-                        .append("\nCorrect Answer: ").append(correctAnswers[i]).append("\n\n");
-
-            } else {
-                result.append("Q").append(i + 1).append(": No Answer\nCorrect Answer: ")
-                        .append(correctAnswers[i]).append("\n\n");
             }
         }
 
-        result.append("Final Score: ").append(score).append("/").append(questions.length);
-
-        resultTextView.setText(result.toString());
-
-        Toast.makeText(this, "Quiz Submitted!", Toast.LENGTH_SHORT).show();
+        // Send the score back to MainScreen
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("ca_score", score + "/" + questions.length);  // Pass score as a string
+        setResult(RESULT_OK, resultIntent);  // Return the result to the calling activity
+        finish();  // Close the current activity (ComputerArchitectureScreen)
     }
 }
