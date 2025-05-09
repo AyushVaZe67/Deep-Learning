@@ -63,8 +63,6 @@ public class MainScreen extends AppCompatActivity {
 
             startActivity(intent);
         });
-
-
     }
 
     private void setupNavigation(int buttonId, int requestCode, Class<?> targetClass, int scoreTextViewId) {

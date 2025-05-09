@@ -20,10 +20,20 @@
         <TextView android:id="@+id/commResult" style="@style/ResultText"/>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnPredict"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Predict"
             android:layout_marginTop="50dp"
+            android:text="Predict" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/finalOutput"
+            android:layout_gravity="center"
+            android:textSize="25dp"
+            android:textColor="@color/button_blue"
             />
     </LinearLayout>
 </ScrollView>
