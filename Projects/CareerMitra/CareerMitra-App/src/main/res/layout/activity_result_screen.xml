@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView android:id="@+id/osResult" style="@style/ResultText"/>
+        <TextView android:id="@+id/algorithmsResult" style="@style/ResultText"/>
+        <TextView android:id="@+id/programmingResult" style="@style/ResultText"/>
+        <TextView android:id="@+id/seResult" style="@style/ResultText"/>
+        <TextView android:id="@+id/cnResult" style="@style/ResultText"/>
+        <TextView android:id="@+id/electronicsResult" style="@style/ResultText"/>
+        <TextView android:id="@+id/caResult" style="@style/ResultText"/>
+        <TextView android:id="@+id/mathResult" style="@style/ResultText"/>
+        <TextView android:id="@+id/commResult" style="@style/ResultText"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Predict"
+            android:layout_marginTop="50dp"
+            />
+    </LinearLayout>
+</ScrollView>

@@ -14,16 +14,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainScreen extends AppCompatActivity {
 
-    AppCompatButton gotoOperatingSystemScreen, goToAlgorithmsScreen, goToProgrammingConcepts,
-            goToSoftwareEngineeringScreen, goToComputerNetworksScreen, goToElectronicsSubjectsScreen,
-            goToComputerArchitectureScreen, goToMathematicsScreen, goToCommunicationSkills;
-
-    TextView osScore, algorithmsScore, programmingConceptsScore,
-            softwareEngineeringScore, computerNetworksScore,
-            electronicsSubjectsScore, computerArchitectureScore,
-            mathematicsScore, communicationSkillsScore;
+    Map<Integer, TextView> scoreViews = new HashMap<>();
+    AppCompatButton goToResultScreen;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -38,99 +35,47 @@ public class MainScreen extends AppCompatActivity {
             return insets;
         });
 
-        osScore = findViewById(R.id.osScoreMainScreen);
-        algorithmsScore = findViewById(R.id.algorithmsScoreMainScreen);
-        programmingConceptsScore = findViewById(R.id.programmingConceptsScoreMainScreen);
-        softwareEngineeringScore = findViewById(R.id.softwareEngineeringScoreMainScreen);
-        computerNetworksScore = findViewById(R.id.computerNetworksScoreMainScreen);
-        electronicsSubjectsScore = findViewById(R.id.electronicsSubjectsScoreMainScreen);
-        computerArchitectureScore = findViewById(R.id.computerArchitectureScoreMainScreen);
-        mathematicsScore = findViewById(R.id.mathematicsScoreMainScreen);
-        communicationSkillsScore = findViewById(R.id.communicationSkillsScoreMainScreen);
+        goToResultScreen = findViewById(R.id.goToResultScreen);
 
+        setupNavigation(R.id.gotoOperatingSystemScreen, 1, OperatingSystemsScreen.class, R.id.osScoreMainScreen);
+        setupNavigation(R.id.goToAlgorithmsScreen, 2, AlgorithmsScreen.class, R.id.algorithmsScoreMainScreen);
+        setupNavigation(R.id.goToProgrammingConcepts, 3, ProgrammingConceptsScreen.class, R.id.programmingConceptsScoreMainScreen);
+        setupNavigation(R.id.goToSoftwareEngineeringScreen, 4, SoftwareEngineeringScreen.class, R.id.softwareEngineeringScoreMainScreen);
+        setupNavigation(R.id.goToComputerNetworksScreen, 5, ComputerNetworksScreen.class, R.id.computerNetworksScoreMainScreen);
+        setupNavigation(R.id.goToElectronicsSubjectsScreen, 6, ElectronicsSubjectsScreen.class, R.id.electronicsSubjectsScoreMainScreen);
+        setupNavigation(R.id.goToComputerArchitectureScreen, 7, ComputerArchitectureScreen.class, R.id.computerArchitectureScoreMainScreen);
+        setupNavigation(R.id.goToMathematicsScreen, 8, MathematicsScreen.class, R.id.mathematicsScoreMainScreen);
+        setupNavigation(R.id.goToCommunicationSkills, 9, CommunicationSkillsScreen.class, R.id.communicationSkillsScoreMainScreen);
 
-        gotoOperatingSystemScreen = findViewById(R.id.gotoOperatingSystemScreen);
-        goToAlgorithmsScreen = findViewById(R.id.goToAlgorithmsScreen);
-        goToProgrammingConcepts = findViewById(R.id.goToProgrammingConcepts);
-        goToSoftwareEngineeringScreen = findViewById(R.id.goToSoftwareEngineeringScreen);
-        goToComputerNetworksScreen = findViewById(R.id.goToComputerNetworksScreen);
-        goToElectronicsSubjectsScreen = findViewById(R.id.goToElectronicsSubjectsScreen);
-        goToComputerArchitectureScreen = findViewById(R.id.goToComputerArchitectureScreen);
-        goToMathematicsScreen = findViewById(R.id.goToMathematicsScreen);
-        goToCommunicationSkills = findViewById(R.id.goToCommunicationSkills);
+        goToResultScreen.setOnClickListener(v -> {
+            Intent intent = new Intent(MainScreen.this, ResultScreen.class);
 
-        gotoOperatingSystemScreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainScreen.this, OperatingSystemsScreen.class);
-                startActivityForResult(intent, 1); // Request code 1
+            // Send all scores to the ResultScreen
+            for (Map.Entry<Integer, TextView> entry : scoreViews.entrySet()) {
+                String label = getScoreKey(entry.getKey());
+                String scoreText = entry.getValue().getText().toString();
+
+                // Extract only the score digit before "/5"
+                String score = scoreText.replaceAll(".*?(\\d)/5.*", "$1");
+
+                intent.putExtra(label, score);
             }
+
+            startActivity(intent);
         });
 
-        goToAlgorithmsScreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainScreen.this, AlgorithmsScreen.class);
-                startActivityForResult(intent, 2); // Request code 2 for algorithms
-            }
-        });
 
-        goToProgrammingConcepts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainScreen.this, ProgrammingConceptsScreen.class);
-                startActivityForResult(intent, 3); // Request code 2 for algorithms
-            }
-        });
+    }
 
-        goToSoftwareEngineeringScreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainScreen.this, SoftwareEngineeringScreen.class);
-                startActivityForResult(intent, 4); // Request code 4
-            }
-        });
+    private void setupNavigation(int buttonId, int requestCode, Class<?> targetClass, int scoreTextViewId) {
+        AppCompatButton button = findViewById(buttonId);
+        TextView scoreView = findViewById(scoreTextViewId);
+        scoreViews.put(requestCode, scoreView);
 
-        goToComputerNetworksScreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainScreen.this, ComputerNetworksScreen.class);
-                startActivityForResult(intent, 5); // Request code 5
-            }
+        button.setOnClickListener(v -> {
+            Intent intent = new Intent(MainScreen.this, targetClass);
+            startActivityForResult(intent, requestCode);
         });
-
-        goToElectronicsSubjectsScreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainScreen.this, ElectronicsSubjectsScreen.class);
-                startActivityForResult(intent, 6); // Request code 6
-            }
-        });
-
-        goToComputerArchitectureScreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainScreen.this, ComputerArchitectureScreen.class);
-                startActivityForResult(intent, 7); // Request code 7
-            }
-        });
-
-        goToMathematicsScreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainScreen.this, MathematicsScreen.class);
-                startActivityForResult(intent, 8); // Request code 8
-            }
-        });
-
-        goToCommunicationSkills.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainScreen.this, CommunicationSkillsScreen.class);
-                startActivityForResult(intent, 9); // Request code 9
-            }
-        });
-
     }
 
     @Override
@@ -138,71 +83,45 @@ public class MainScreen extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK && data != null) {
-            switch (requestCode) {
-                case 1:
-                    String osScoreText = data.getStringExtra("os_score");
-                    if (osScoreText != null && osScore != null) {
-                        osScore.setText("Operating System Score: " + osScoreText);
-                    }
-                    break;
+            TextView scoreView = scoreViews.get(requestCode);
+            String key = getScoreKey(requestCode);
 
-                case 2:
-                    String algorithmsScoreText = data.getStringExtra("algorithms_score");
-                    if (algorithmsScoreText != null && algorithmsScore != null) {
-                        algorithmsScore.setText("Algorithms Score: " + algorithmsScoreText);
-                    }
-                    break;
-
-                case 3:
-                    String programmingConceptsScoreText = data.getStringExtra("programming_score");
-                    if (programmingConceptsScoreText != null && programmingConceptsScore != null) {
-                        programmingConceptsScore.setText("Programming Concepts Score: " + programmingConceptsScoreText);
-                    }
-                    break;
-
-                case 4:
-                    String seScoreText = data.getStringExtra("se_score");
-                    if (seScoreText != null && softwareEngineeringScore != null) {
-                        softwareEngineeringScore.setText("Software Engineering Score: " + seScoreText);
-                    }
-                    break;
-
-                case 5:
-                    String cnScoreText = data.getStringExtra("cn_score");
-                    if (cnScoreText != null && computerNetworksScore != null) {
-                        computerNetworksScore.setText("Computer Networks Score: " + cnScoreText);
-                    }
-                    break;
-
-                case 6:
-                    String electronicsScoreText = data.getStringExtra("electronics_score");
-                    if (electronicsScoreText != null && electronicsSubjectsScore != null) {
-                        electronicsSubjectsScore.setText("Electronics Score: " + electronicsScoreText);
-                    }
-                    break;
-
-                case 7:
-                    String caScoreText = data.getStringExtra("ca_score");
-                    if (caScoreText != null && computerArchitectureScore != null) {
-                        computerArchitectureScore.setText("Computer Architecture Score: " + caScoreText);
-                    }
-                    break;
-
-                case 8:
-                    String mathScoreText = data.getStringExtra("math_score");
-                    if (mathScoreText != null && mathematicsScore != null) {
-                        mathematicsScore.setText("Mathematics Score: " + mathScoreText);
-                    }
-                    break;
-
-                case 9:
-                    String commScoreText = data.getStringExtra("comm_score");
-                    if (commScoreText != null && communicationSkillsScore != null) {
-                        communicationSkillsScore.setText("Communication Skills Score: " + commScoreText);
-                    }
-                    break;
+            if (scoreView != null && key != null) {
+                String score = data.getStringExtra(key);
+                if (score != null) {
+                    scoreView.setText(getSubjectLabel(requestCode) + " Score: " + score);
+                }
             }
         }
     }
 
+    private String getScoreKey(int requestCode) {
+        switch (requestCode) {
+            case 1: return "os_score";
+            case 2: return "algorithms_score";
+            case 3: return "programming_score";
+            case 4: return "se_score";
+            case 5: return "cn_score";
+            case 6: return "electronics_score";
+            case 7: return "ca_score";
+            case 8: return "math_score";
+            case 9: return "comm_score";
+            default: return null;
+        }
+    }
+
+    private String getSubjectLabel(int requestCode) {
+        switch (requestCode) {
+            case 1: return "Operating System";
+            case 2: return "Algorithms";
+            case 3: return "Programming Concepts";
+            case 4: return "Software Engineering";
+            case 5: return "Computer Networks";
+            case 6: return "Electronics";
+            case 7: return "Computer Architecture";
+            case 8: return "Mathematics";
+            case 9: return "Communication Skills";
+            default: return "Unknown";
+        }
+    }
 }
