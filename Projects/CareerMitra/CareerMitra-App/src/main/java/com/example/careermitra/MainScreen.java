@@ -7,7 +7,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.Nullable;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.Insets;
@@ -20,6 +23,7 @@ import java.util.Map;
 public class MainScreen extends AppCompatActivity {
 
     Map<Integer, TextView> scoreViews = new HashMap<>();
+    Map<Integer, ActivityResultLauncher<Intent>> launchers = new HashMap<>();
     AppCompatButton goToResultScreen;
 
     @SuppressLint("MissingInflatedId")
@@ -50,15 +54,15 @@ public class MainScreen extends AppCompatActivity {
         goToResultScreen.setOnClickListener(v -> {
             Intent intent = new Intent(MainScreen.this, ResultScreen.class);
 
-            // Send all scores to the ResultScreen
             for (Map.Entry<Integer, TextView> entry : scoreViews.entrySet()) {
-                String label = getScoreKey(entry.getKey());
+                int requestCode = entry.getKey();
+                String key = getScoreKey(requestCode);
                 String scoreText = entry.getValue().getText().toString();
 
-                // Extract only the score digit before "/5"
-                String score = scoreText.replaceAll(".*?(\\d)/5.*", "$1");
+                int scoreOutOf5 = extractScoreFromText(scoreText);
+                int scoreOutOf100 = scoreOutOf5 * 20;
 
-                intent.putExtra(label, score);
+                intent.putExtra(key, scoreOutOf100);
             }
 
             startActivity(intent);
@@ -70,27 +74,34 @@ public class MainScreen extends AppCompatActivity {
         TextView scoreView = findViewById(scoreTextViewId);
         scoreViews.put(requestCode, scoreView);
 
+        // Register the launcher
+        ActivityResultLauncher<Intent> launcher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                getActivityResultCallback(requestCode)
+        );
+
+        launchers.put(requestCode, launcher);
+
         button.setOnClickListener(v -> {
             Intent intent = new Intent(MainScreen.this, targetClass);
-            startActivityForResult(intent, requestCode);
+            launcher.launch(intent);
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private ActivityResultCallback<ActivityResult> getActivityResultCallback(int requestCode) {
+        return result -> {
+            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                TextView scoreView = scoreViews.get(requestCode);
+                String key = getScoreKey(requestCode);
 
-        if (resultCode == RESULT_OK && data != null) {
-            TextView scoreView = scoreViews.get(requestCode);
-            String key = getScoreKey(requestCode);
-
-            if (scoreView != null && key != null) {
-                String score = data.getStringExtra(key);
-                if (score != null) {
-                    scoreView.setText(getSubjectLabel(requestCode) + " Score: " + score);
+                if (scoreView != null && key != null) {
+                    String score = result.getData().getStringExtra(key);
+                    if (score != null) {
+                        scoreView.setText("Score: " + score);
+                    }
                 }
             }
-        }
+        };
     }
 
     private String getScoreKey(int requestCode) {
@@ -108,18 +119,13 @@ public class MainScreen extends AppCompatActivity {
         }
     }
 
-    private String getSubjectLabel(int requestCode) {
-        switch (requestCode) {
-            case 1: return "Operating System";
-            case 2: return "Algorithms";
-            case 3: return "Programming Concepts";
-            case 4: return "Software Engineering";
-            case 5: return "Computer Networks";
-            case 6: return "Electronics";
-            case 7: return "Computer Architecture";
-            case 8: return "Mathematics";
-            case 9: return "Communication Skills";
-            default: return "Unknown";
+    private int extractScoreFromText(String text) {
+        try {
+            String[] parts = text.split(":");
+            String raw = parts[1].replaceAll("/.*", "").trim(); // get just the number before "/"
+            return Integer.parseInt(raw);
+        } catch (Exception e) {
+            return 0;
         }
     }
 }

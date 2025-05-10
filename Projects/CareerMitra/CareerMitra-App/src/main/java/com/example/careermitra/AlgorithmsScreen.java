@@ -12,90 +12,104 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class AlgorithmsScreen extends AppCompatActivity {
 
     private LinearLayout questionContainer;
     private final ArrayList<RadioGroup> radioGroups = new ArrayList<>();
     private final ArrayList<RadioButton[]> radioButtonsList = new ArrayList<>();
+    private final List<Question> allQuestions = new ArrayList<>();
+    private TextView resultTextView;
 
-    private final String[] questions = {
-            "1. What is the time complexity of binary search?",
-            "2. Which sorting algorithm is the fastest in average case?",
-            "3. What does 'Big O' notation describe?",
-            "4. Which algorithm technique does merge sort use?",
-            "5. What is the worst-case time complexity of bubble sort?"
-    };
+    private static class Question {
+        String question;
+        String[] options;
+        String correctAnswer;
 
-    private final String[][] options = {
-            {"O(n)", "O(log n)", "O(n log n)", "O(1)"},
-            {"Bubble Sort", "Insertion Sort", "Merge Sort", "Quick Sort"},
-            {"Memory usage", "Execution time", "Growth rate", "Code size"},
-            {"Divide and Conquer", "Backtracking", "Greedy", "Dynamic Programming"},
-            {"O(n)", "O(log n)", "O(n^2)", "O(n log n)"}
-    };
-
-    private final String[] correctAnswers = {
-            "O(log n)",
-            "Quick Sort",
-            "Growth rate",
-            "Divide and Conquer",
-            "O(n^2)"
-    };
-
-    private TextView scoreTextView;
+        Question(String q, String[] o, String a) {
+            question = q;
+            options = o;
+            correctAnswer = a;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_algorithms_screen);
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         questionContainer = findViewById(R.id.AlgorithmsQuestionContainer);
 
-        createQuiz();
+        loadAllQuestions();
+        Collections.shuffle(allQuestions);
+        createQuiz(allQuestions.subList(0, 5)); // Select 5 questions
         addSubmitButton();
-        addScoreView();
     }
 
-    private void createQuiz() {
-        for (int i = 0; i < questions.length; i++) {
-            addQuestion(questions[i], options[i], correctAnswers[i]);
+    private void loadAllQuestions() {
+        allQuestions.clear();
+
+        // Sample 5 questions only for brevity. Add more as needed.
+        allQuestions.add(new Question(
+                "What is the time complexity of binary search?",
+                new String[]{"O(n)", "O(log n)", "O(n log n)", "O(1)"},
+                "O(log n)"
+        ));
+
+        allQuestions.add(new Question(
+                "Which data structure uses FIFO?",
+                new String[]{"Stack", "Queue", "Tree", "Graph"},
+                "Queue"
+        ));
+
+        allQuestions.add(new Question(
+                "Which algorithm finds shortest path in weighted graphs?",
+                new String[]{"DFS", "Kruskal", "Dijkstra's Algorithm", "Prim"},
+                "Dijkstra's Algorithm"
+        ));
+
+        allQuestions.add(new Question(
+                "Which sorting algorithm is best when array is nearly sorted?",
+                new String[]{"Quick Sort", "Heap Sort", "Bubble Sort", "Insertion Sort"},
+                "Insertion Sort"
+        ));
+
+        allQuestions.add(new Question(
+                "Which algorithm is used for cycle detection in graphs?",
+                new String[]{"Dijkstra", "DFS", "BFS", "Prim"},
+                "DFS"
+        ));
+    }
+
+    private void createQuiz(List<Question> selectedQuestions) {
+        for (Question q : selectedQuestions) {
+            addQuestion(q);
         }
     }
 
-    private void addQuestion(String questionText, String[] optionsArray, String correctAnswer) {
+    private void addQuestion(Question q) {
         TextView textView = new TextView(this);
-        textView.setText(questionText);
+        textView.setText(q.question);
         textView.setTextSize(18);
-        textView.setTextColor(getColor(android.R.color.black));
-        textView.setPadding(0, 24, 0, 8);
+        textView.setTextColor(getResources().getColor(R.color.text_dark_blue));
+        textView.setPadding(20, 32, 20, 12);
         questionContainer.addView(textView);
 
         RadioGroup radioGroup = new RadioGroup(this);
         radioGroup.setOrientation(RadioGroup.VERTICAL);
-        radioGroup.setPadding(16, 0, 0, 8);
+        radioGroup.setPadding(20, 12, 20, 24);
 
-        RadioButton[] radioButtons = new RadioButton[optionsArray.length];
-
-        for (int i = 0; i < optionsArray.length; i++) {
+        RadioButton[] radioButtons = new RadioButton[q.options.length];
+        for (int i = 0; i < q.options.length; i++) {
             RadioButton radioButton = new RadioButton(this);
-            radioButton.setText(optionsArray[i]);
+            radioButton.setText(q.options[i]);
             radioButton.setTextSize(16);
-            radioButton.setTextColor(getColor(android.R.color.darker_gray));
+            radioButton.setTextColor(getResources().getColor(R.color.text_dark_gray));
             radioGroup.addView(radioButton);
             radioButtons[i] = radioButton;
         }
@@ -108,31 +122,26 @@ public class AlgorithmsScreen extends AppCompatActivity {
     private void addSubmitButton() {
         Button submitButton = new Button(this);
         submitButton.setText("Submit Answers");
-        submitButton.setTextSize(16);
-        submitButton.setBackgroundColor(getColor(android.R.color.holo_blue_light));
-        submitButton.setTextColor(getColor(android.R.color.white));
-        submitButton.setPadding(24, 16, 24, 16);
+        submitButton.setBackgroundColor(getResources().getColor(R.color.button_blue));
+        submitButton.setTextColor(getResources().getColor(R.color.white));
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        params.topMargin = 40;
         params.gravity = Gravity.CENTER_HORIZONTAL;
         submitButton.setLayoutParams(params);
+        submitButton.setPadding(40, 20, 40, 20);
 
         submitButton.setOnClickListener(view -> evaluateQuiz());
 
         questionContainer.addView(submitButton);
-    }
 
-    private void addScoreView() {
-        scoreTextView = new TextView(this);
-        scoreTextView.setTextSize(18);
-        scoreTextView.setTextColor(Color.BLACK);
-        scoreTextView.setPadding(0, 32, 0, 32);
-        scoreTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-        questionContainer.addView(scoreTextView);
+        resultTextView = new TextView(this);
+        resultTextView.setTextSize(16);
+        resultTextView.setPadding(20, 40, 20, 40);
+        resultTextView.setTextColor(getResources().getColor(R.color.primary_dark_blue));
+        questionContainer.addView(resultTextView);
     }
 
     private void evaluateQuiz() {
@@ -142,18 +151,19 @@ public class AlgorithmsScreen extends AppCompatActivity {
             RadioGroup group = radioGroups.get(i);
             int selectedId = group.getCheckedRadioButtonId();
             RadioButton[] options = radioButtonsList.get(i);
-            String correctAnswer = correctAnswers[i];
+            String correctAnswer = allQuestions.get(i).correctAnswer;
 
             for (RadioButton rb : options) {
-                rb.setEnabled(false); // Disable all after submit
+                rb.setEnabled(false);
+
                 String answer = rb.getText().toString();
 
                 if (answer.equals(correctAnswer)) {
-                    rb.setTextColor(Color.parseColor("#388E3C")); // Green
+                    rb.setTextColor(Color.parseColor("#388E3C")); // green
                 }
 
                 if (selectedId == rb.getId() && !answer.equals(correctAnswer)) {
-                    rb.setTextColor(Color.parseColor("#D32F2F")); // Red
+                    rb.setTextColor(Color.parseColor("#D32F2F")); // red
                 }
 
                 if (selectedId == rb.getId() && answer.equals(correctAnswer)) {
@@ -162,15 +172,13 @@ public class AlgorithmsScreen extends AppCompatActivity {
             }
         }
 
-        String scoreText = "You scored " + score + " out of " + questions.length;
-        scoreTextView.setText(scoreText);
-        Toast.makeText(this, "Score: " + score + "/" + questions.length, Toast.LENGTH_SHORT).show();
+        String scoreText = "You scored " + score + " out of " + radioGroups.size();
+        resultTextView.setText(scoreText);
+        Toast.makeText(this, "Score: " + score + "/" + radioGroups.size(), Toast.LENGTH_SHORT).show();
 
-        // Send score back to MainScreen
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("algorithms_score", score + "/" + questions.length);
+        resultIntent.putExtra("algorithms_score", score + "/" + radioGroups.size());
         setResult(RESULT_OK, resultIntent);
-        finish(); // Finish and return to MainScreen
+        finish(); // Return to main screen
     }
-
 }

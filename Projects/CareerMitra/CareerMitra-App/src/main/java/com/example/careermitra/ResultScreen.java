@@ -1,6 +1,5 @@
 package com.example.careermitra;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -25,12 +24,10 @@ public class ResultScreen extends AppCompatActivity {
     TextView finalOutput;
     ProgressBar progressBar;
 
-
-    // Declare scores at the class level
-    float os_score, algorithms_score, programming_score, se_score,
+    // All scores as integers
+    int os_score, algorithms_score, programming_score, se_score,
             cn_score, electronics_score, ca_score, math_score, comm_score;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,17 +37,16 @@ public class ResultScreen extends AppCompatActivity {
         finalOutput = findViewById(R.id.finalOutput);
         progressBar = findViewById(R.id.progressBar);
 
-
-        // Get and convert scores
-        os_score = convertScoreToRange(parseScore(getIntent().getStringExtra("os_score")));
-        algorithms_score = convertScoreToRange(parseScore(getIntent().getStringExtra("algorithms_score")));
-        programming_score = convertScoreToRange(parseScore(getIntent().getStringExtra("programming_score")));
-        se_score = convertScoreToRange(parseScore(getIntent().getStringExtra("se_score")));
-        cn_score = convertScoreToRange(parseScore(getIntent().getStringExtra("cn_score")));
-        electronics_score = convertScoreToRange(parseScore(getIntent().getStringExtra("electronics_score")));
-        ca_score = convertScoreToRange(parseScore(getIntent().getStringExtra("ca_score")));
-        math_score = convertScoreToRange(parseScore(getIntent().getStringExtra("math_score")));
-        comm_score = convertScoreToRange(parseScore(getIntent().getStringExtra("comm_score")));
+        // Get integer scores directly
+        os_score = getIntent().getIntExtra("os_score", 0);
+        algorithms_score = getIntent().getIntExtra("algorithms_score", 0);
+        programming_score = getIntent().getIntExtra("programming_score", 0);
+        se_score = getIntent().getIntExtra("se_score", 0);
+        cn_score = getIntent().getIntExtra("cn_score", 0);
+        electronics_score = getIntent().getIntExtra("electronics_score", 0);
+        ca_score = getIntent().getIntExtra("ca_score", 0);
+        math_score = getIntent().getIntExtra("math_score", 0);
+        comm_score = getIntent().getIntExtra("comm_score", 0);
 
         // Display scores
         setScore(R.id.osResult, os_score);
@@ -63,6 +59,7 @@ public class ResultScreen extends AppCompatActivity {
         setScore(R.id.mathResult, math_score);
         setScore(R.id.commResult, comm_score);
 
+        // Predict button click
         btnPredict.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,21 +83,9 @@ public class ResultScreen extends AppCompatActivity {
         });
     }
 
-    private void setScore(int viewId, float score) {
+    private void setScore(int viewId, int score) {
         TextView resultView = findViewById(viewId);
-        resultView.setText("Score: " + score);
-    }
-
-    private float parseScore(String score) {
-        try {
-            return score != null ? Float.parseFloat(score) : 0.0f;
-        } catch (NumberFormatException e) {
-            return 0.0f;
-        }
-    }
-
-    private float convertScoreToRange(float score) {
-        return 20 + ((score - 1) / (5 - 1)) * 80; // 80 = (100 - 20)
+        resultView.setText("Score: " + score + "/100");
     }
 
     private void sendRequestToAPI(JSONObject data) {
