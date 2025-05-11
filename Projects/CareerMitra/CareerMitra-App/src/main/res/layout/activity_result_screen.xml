@@ -2,49 +2,73 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@android:color/white">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
 
-        <TextView android:id="@+id/osResult" style="@style/ResultText"/>
-        <TextView android:id="@+id/algorithmsResult" style="@style/ResultText"/>
-        <TextView android:id="@+id/programmingResult" style="@style/ResultText"/>
-        <TextView android:id="@+id/seResult" style="@style/ResultText"/>
-        <TextView android:id="@+id/cnResult" style="@style/ResultText"/>
-        <TextView android:id="@+id/electronicsResult" style="@style/ResultText"/>
-        <TextView android:id="@+id/caResult" style="@style/ResultText"/>
-        <TextView android:id="@+id/mathResult" style="@style/ResultText"/>
-        <TextView android:id="@+id/commResult" style="@style/ResultText"/>
+        <!-- Results in Card-like containers -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/darker_gray"
+            android:padding="12dp"
+            android:layout_marginBottom="8dp"
+            android:elevation="2dp"
+            android:backgroundTint="#F5F5F5"
+            android:clipToPadding="false"
+            android:layout_marginTop="8dp">
 
+            <TextView android:id="@+id/osResult" style="@style/ResultText" />
+            <TextView android:id="@+id/algorithmsResult" style="@style/ResultText" />
+            <TextView android:id="@+id/programmingResult" style="@style/ResultText" />
+            <TextView android:id="@+id/seResult" style="@style/ResultText" />
+            <TextView android:id="@+id/cnResult" style="@style/ResultText" />
+            <TextView android:id="@+id/electronicsResult" style="@style/ResultText" />
+            <TextView android:id="@+id/caResult" style="@style/ResultText" />
+            <TextView android:id="@+id/mathResult" style="@style/ResultText" />
+            <TextView android:id="@+id/commResult" style="@style/ResultText" />
+        </LinearLayout>
+
+        <!-- Predict Button -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnPredict"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:text="Predict" />
+            android:layout_marginTop="30dp"
+            android:text="Predict"
+            android:textSize="18sp"
+            android:padding="12dp"
+            android:backgroundTint="@color/button_blue"
+            android:textColor="@android:color/white"
+            android:elevation="4dp" />
 
-
+        <!-- Final Output Text -->
         <TextView
+            android:id="@+id/finalOutput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/finalOutput"
+            android:layout_marginTop="24dp"
             android:layout_gravity="center"
-            android:textSize="25dp"
-            android:textColor="@color/button_blue"
-            />
+            android:gravity="center"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/button_blue" />
 
+        <!-- ProgressBar -->
         <ProgressBar
             android:id="@+id/progressBar"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="20dp"
             android:visibility="gone"
-            style="?android:attr/progressBarStyleLarge"
-            />
-
+            style="?android:attr/progressBarStyleLarge" />
 
     </LinearLayout>
 </ScrollView>
