@@ -59,8 +59,8 @@ public class MainScreen extends AppCompatActivity {
                 String key = getScoreKey(requestCode);
                 String scoreText = entry.getValue().getText().toString();
 
-                int scoreOutOf5 = extractScoreFromText(scoreText);
-                int scoreOutOf100 = scoreOutOf5 * 20;
+                float scoreOutOf5 = extractScoreFromText(scoreText);
+                float scoreOutOf100 = scoreOutOf5 * 20f;
 
                 intent.putExtra(key, scoreOutOf100);
             }
@@ -74,7 +74,6 @@ public class MainScreen extends AppCompatActivity {
         TextView scoreView = findViewById(scoreTextViewId);
         scoreViews.put(requestCode, scoreView);
 
-        // Register the launcher
         ActivityResultLauncher<Intent> launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 getActivityResultCallback(requestCode)
@@ -119,13 +118,13 @@ public class MainScreen extends AppCompatActivity {
         }
     }
 
-    private int extractScoreFromText(String text) {
+    private float extractScoreFromText(String text) {
         try {
             String[] parts = text.split(":");
-            String raw = parts[1].replaceAll("/.*", "").trim(); // get just the number before "/"
-            return Integer.parseInt(raw);
+            String raw = parts[1].replaceAll("/.*", "").trim(); // number before "/"
+            return Float.parseFloat(raw);
         } catch (Exception e) {
-            return 0;
+            return 0f;
         }
     }
 }

@@ -24,8 +24,8 @@ public class ResultScreen extends AppCompatActivity {
     TextView finalOutput;
     ProgressBar progressBar;
 
-    // All scores as integers
-    int os_score, algorithms_score, programming_score, se_score,
+    // All scores as floats
+    float os_score, algorithms_score, programming_score, se_score,
             cn_score, electronics_score, ca_score, math_score, comm_score;
 
     @Override
@@ -37,16 +37,16 @@ public class ResultScreen extends AppCompatActivity {
         finalOutput = findViewById(R.id.finalOutput);
         progressBar = findViewById(R.id.progressBar);
 
-        // Get integer scores directly
-        os_score = getIntent().getIntExtra("os_score", 0);
-        algorithms_score = getIntent().getIntExtra("algorithms_score", 0);
-        programming_score = getIntent().getIntExtra("programming_score", 0);
-        se_score = getIntent().getIntExtra("se_score", 0);
-        cn_score = getIntent().getIntExtra("cn_score", 0);
-        electronics_score = getIntent().getIntExtra("electronics_score", 0);
-        ca_score = getIntent().getIntExtra("ca_score", 0);
-        math_score = getIntent().getIntExtra("math_score", 0);
-        comm_score = getIntent().getIntExtra("comm_score", 0);
+        // Get float scores directly
+        os_score = getIntent().getFloatExtra("os_score", 0f);
+        algorithms_score = getIntent().getFloatExtra("algorithms_score", 0f);
+        programming_score = getIntent().getFloatExtra("programming_score", 0f);
+        se_score = getIntent().getFloatExtra("se_score", 0f);
+        cn_score = getIntent().getFloatExtra("cn_score", 0f);
+        electronics_score = getIntent().getFloatExtra("electronics_score", 0f);
+        ca_score = getIntent().getFloatExtra("ca_score", 0f);
+        math_score = getIntent().getFloatExtra("math_score", 0f);
+        comm_score = getIntent().getFloatExtra("comm_score", 0f);
 
         // Display scores
         setScore(R.id.osResult, os_score);
@@ -60,30 +60,27 @@ public class ResultScreen extends AppCompatActivity {
         setScore(R.id.commResult, comm_score);
 
         // Predict button click
-        btnPredict.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                JSONObject data = new JSONObject();
-                try {
-                    data.put("Acedamic percentage in Operating Systems", os_score);
-                    data.put("percentage in Algorithms", algorithms_score);
-                    data.put("Percentage in Programming Concepts", programming_score);
-                    data.put("Percentage in Software Engineering", se_score);
-                    data.put("Percentage in Computer Networks", cn_score);
-                    data.put("Percentage in Electronics Subjects", electronics_score);
-                    data.put("Percentage in Computer Architecture", ca_score);
-                    data.put("Percentage in Mathematics", math_score);
-                    data.put("Percentage in Communication skills", comm_score);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                sendRequestToAPI(data);
+        btnPredict.setOnClickListener(v -> {
+            JSONObject data = new JSONObject();
+            try {
+                data.put("Acedamic percentage in Operating Systems", os_score);
+                data.put("percentage in Algorithms", algorithms_score);
+                data.put("Percentage in Programming Concepts", programming_score);
+                data.put("Percentage in Software Engineering", se_score);
+                data.put("Percentage in Computer Networks", cn_score);
+                data.put("Percentage in Electronics Subjects", electronics_score);
+                data.put("Percentage in Computer Architecture", ca_score);
+                data.put("Percentage in Mathematics", math_score);
+                data.put("Percentage in Communication skills", comm_score);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+
+            sendRequestToAPI(data);
         });
     }
 
-    private void setScore(int viewId, int score) {
+    private void setScore(int viewId, float score) {
         TextView resultView = findViewById(viewId);
         resultView.setText("Score: " + score + "/100");
     }
