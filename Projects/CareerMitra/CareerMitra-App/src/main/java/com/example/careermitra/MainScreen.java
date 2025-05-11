@@ -54,11 +54,13 @@ public class MainScreen extends AppCompatActivity {
         goToResultScreen.setOnClickListener(v -> {
             Intent intent = new Intent(MainScreen.this, ResultScreen.class);
 
+            // Pass the individual scores as extra data to the ResultScreen
             for (Map.Entry<Integer, TextView> entry : scoreViews.entrySet()) {
                 int requestCode = entry.getKey();
                 String key = getScoreKey(requestCode);
                 String scoreText = entry.getValue().getText().toString();
 
+                // Convert score to float and scale it to 100 (i.e., score out of 100)
                 float scoreOutOf5 = extractScoreFromText(scoreText);
                 float scoreOutOf100 = scoreOutOf5 * 20f;
 
