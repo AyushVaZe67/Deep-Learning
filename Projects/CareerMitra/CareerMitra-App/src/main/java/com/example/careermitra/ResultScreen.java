@@ -24,7 +24,7 @@ public class ResultScreen extends AppCompatActivity {
     TextView finalOutput;
     ProgressBar progressBar;
 
-    // All scores as floats
+    // All scores as floats for display purposes
     float os_score, algorithms_score, programming_score, se_score,
             cn_score, electronics_score, ca_score, math_score, comm_score;
 
@@ -50,7 +50,7 @@ public class ResultScreen extends AppCompatActivity {
             math_score = extras.getFloat("math_score", 0f);
             comm_score = extras.getFloat("comm_score", 0f);
 
-            // Display all scores
+            // Display all scores (still showing as float for better user experience)
             setScore(R.id.osResult, os_score);
             setScore(R.id.algorithmsResult, algorithms_score);
             setScore(R.id.programmingResult, programming_score);
@@ -67,17 +67,20 @@ public class ResultScreen extends AppCompatActivity {
         btnPredict.setOnClickListener(v -> {
             JSONObject data = new JSONObject();
             try {
-                data.put("Acedamic percentage in Operating Systems", os_score);
-                data.put("percentage in Algorithms", algorithms_score);
-                data.put("Percentage in Programming Concepts", programming_score);
-                data.put("Percentage in Software Engineering", se_score);
-                data.put("Percentage in Computer Networks", cn_score);
-                data.put("Percentage in Electronics Subjects", electronics_score);
-                data.put("Percentage in Computer Architecture", ca_score);
-                data.put("Percentage in Mathematics", math_score);
-                data.put("Percentage in Communication skills", comm_score);
+                // Convert all scores to integers before sending to API
+                data.put("Acedamic percentage in Operating Systems", (int) os_score);
+                data.put("percentage in Algorithms", (int) algorithms_score);
+                data.put("Percentage in Programming Concepts", (int) programming_score);
+                data.put("Percentage in Software Engineering", (int) se_score);
+                data.put("Percentage in Computer Networks", (int) cn_score);
+                data.put("Percentage in Electronics Subjects", (int) electronics_score);
+                data.put("Percentage in Computer Architecture", (int) ca_score);
+                data.put("Percentage in Mathematics", (int) math_score);
+                data.put("Percentage in Communication skills", (int) comm_score);
             } catch (JSONException e) {
                 e.printStackTrace();
+                Toast.makeText(this, "Error preparing data", Toast.LENGTH_SHORT).show();
+                return;
             }
 
             sendRequestToAPI(data);
@@ -87,6 +90,7 @@ public class ResultScreen extends AppCompatActivity {
     private void setScore(int viewId, float score) {
         TextView resultView = findViewById(viewId);
         if (resultView != null) {
+            // Still showing float to user for better precision
             resultView.setText(String.format("Score: %.1f/100", score));
         }
     }
