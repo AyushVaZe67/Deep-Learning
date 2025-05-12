@@ -105,10 +105,11 @@ public class MainScreen extends AppCompatActivity {
         };
     }
 
+
     private String getScoreKey(int requestCode) {
         switch (requestCode) {
             case 1: return "os_score";
-            case 2: return "algorithms_score";
+            case 2: return "algo_score";
             case 3: return "programming_score";
             case 4: return "se_score";
             case 5: return "cn_score";
