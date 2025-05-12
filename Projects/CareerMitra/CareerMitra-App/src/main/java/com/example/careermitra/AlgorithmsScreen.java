@@ -203,13 +203,14 @@ public class AlgorithmsScreen extends AppCompatActivity {
 
         // Calculate the score as percentage out of 100
         int percentageScore = (score * 100) / 10;  // 10 questions, so multiply by 100 and divide by 10
-        String scoreText = "You scored " + percentageScore + " out of 100";
+        String scoreText = "You scored " + percentageScore + "/100";  // Keeping the format as String
         scoreTextView.setText(scoreText);
         Toast.makeText(this, "Score: " + percentageScore + "/100", Toast.LENGTH_SHORT).show();
 
-        // Send score back to MainScreen as an integer
+        // Send score back to MainScreen as a String
+        String scoreResult = percentageScore + "/100";
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("algo_score", percentageScore);  // Passing as integer
+        resultIntent.putExtra("algo_score", scoreResult);  // Passing as String
         setResult(RESULT_OK, resultIntent);
         finish(); // End activity
     }

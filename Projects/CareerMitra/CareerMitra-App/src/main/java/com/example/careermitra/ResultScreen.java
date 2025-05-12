@@ -37,29 +37,33 @@ public class ResultScreen extends AppCompatActivity {
         finalOutput = findViewById(R.id.finalOutput);
         progressBar = findViewById(R.id.progressBar);
 
-        // Get float scores directly
-        os_score = getIntent().getFloatExtra("os_score", 0f);
-        algorithms_score = getIntent().getFloatExtra("algorithms_score", 0f);
-        programming_score = getIntent().getFloatExtra("programming_score", 0f);
-        se_score = getIntent().getFloatExtra("se_score", 0f);
-        cn_score = getIntent().getFloatExtra("cn_score", 0f);
-        electronics_score = getIntent().getFloatExtra("electronics_score", 0f);
-        ca_score = getIntent().getFloatExtra("ca_score", 0f);
-        math_score = getIntent().getFloatExtra("math_score", 0f);
-        comm_score = getIntent().getFloatExtra("comm_score", 0f);
+        // Get all scores from intent
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            os_score = extras.getFloat("os_score", 0f);
+            algorithms_score = extras.getFloat("algo_score", 0f);
+            programming_score = extras.getFloat("programming_score", 0f);
+            se_score = extras.getFloat("se_score", 0f);
+            cn_score = extras.getFloat("cn_score", 0f);
+            electronics_score = extras.getFloat("electronics_score", 0f);
+            ca_score = extras.getFloat("ca_score", 0f);
+            math_score = extras.getFloat("math_score", 0f);
+            comm_score = extras.getFloat("comm_score", 0f);
 
-        // Display scores
-        setScore(R.id.osResult, os_score);
-        setScore(R.id.algorithmsResult, algorithms_score);
-        setScore(R.id.programmingResult, programming_score);
-        setScore(R.id.seResult, se_score);
-        setScore(R.id.cnResult, cn_score);
-        setScore(R.id.electronicsResult, electronics_score);
-        setScore(R.id.caResult, ca_score);
-        setScore(R.id.mathResult, math_score);
-        setScore(R.id.commResult, comm_score);
+            // Display all scores
+            setScore(R.id.osResult, os_score);
+            setScore(R.id.algorithmsResult, algorithms_score);
+            setScore(R.id.programmingResult, programming_score);
+            setScore(R.id.seResult, se_score);
+            setScore(R.id.cnResult, cn_score);
+            setScore(R.id.electronicsResult, electronics_score);
+            setScore(R.id.caResult, ca_score);
+            setScore(R.id.mathResult, math_score);
+            setScore(R.id.commResult, comm_score);
+        } else {
+            Toast.makeText(this, "No scores received", Toast.LENGTH_SHORT).show();
+        }
 
-        // Predict button click
         btnPredict.setOnClickListener(v -> {
             JSONObject data = new JSONObject();
             try {
@@ -82,7 +86,9 @@ public class ResultScreen extends AppCompatActivity {
 
     private void setScore(int viewId, float score) {
         TextView resultView = findViewById(viewId);
-        resultView.setText("Score: " + score + "/100");
+        if (resultView != null) {
+            resultView.setText(String.format("Score: %.1f/100", score));
+        }
     }
 
     private void sendRequestToAPI(JSONObject data) {
@@ -91,27 +97,22 @@ public class ResultScreen extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         finalOutput.setText("");
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, data,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        progressBar.setVisibility(View.GONE);
-                        try {
-                            String predictedJobRole = response.getString("predicted_job_role");
-                            finalOutput.setText("Predicted Job Role: " + predictedJobRole);
-                        } catch (JSONException e) {
-                            finalOutput.setText("Parsing error!");
-                            e.printStackTrace();
-                        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST, url, data,
+                response -> {
+                    progressBar.setVisibility(View.GONE);
+                    try {
+                        String predictedJobRole = response.getString("predicted_job_role");
+                        finalOutput.setText("Predicted Job Role: " + predictedJobRole);
+                    } catch (JSONException e) {
+                        finalOutput.setText("Error parsing response");
+                        e.printStackTrace();
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        progressBar.setVisibility(View.GONE);
-                        finalOutput.setText("API Error: " + error.getMessage());
-                        Toast.makeText(ResultScreen.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                error -> {
+                    progressBar.setVisibility(View.GONE);
+                    finalOutput.setText("API Error: " + error.getMessage());
+                    Toast.makeText(ResultScreen.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 });
 
         Volley.newRequestQueue(this).add(jsonObjectRequest);

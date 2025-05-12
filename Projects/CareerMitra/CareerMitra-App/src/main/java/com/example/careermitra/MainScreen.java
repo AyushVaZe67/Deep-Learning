@@ -41,44 +41,67 @@ public class MainScreen extends AppCompatActivity {
 
         goToResultScreen = findViewById(R.id.goToResultScreen);
 
-        setupNavigation(R.id.gotoOperatingSystemScreen, 1, OperatingSystemsScreen.class, R.id.osScoreMainScreen);
-        setupNavigation(R.id.goToAlgorithmsScreen, 2, AlgorithmsScreen.class, R.id.algorithmsScoreMainScreen);
-        setupNavigation(R.id.goToProgrammingConcepts, 3, ProgrammingConceptsScreen.class, R.id.programmingConceptsScoreMainScreen);
-        setupNavigation(R.id.goToSoftwareEngineeringScreen, 4, SoftwareEngineeringScreen.class, R.id.softwareEngineeringScoreMainScreen);
-        setupNavigation(R.id.goToComputerNetworksScreen, 5, ComputerNetworksScreen.class, R.id.computerNetworksScoreMainScreen);
-        setupNavigation(R.id.goToElectronicsSubjectsScreen, 6, ElectronicsSubjectsScreen.class, R.id.electronicsSubjectsScoreMainScreen);
-        setupNavigation(R.id.goToComputerArchitectureScreen, 7, ComputerArchitectureScreen.class, R.id.computerArchitectureScoreMainScreen);
-        setupNavigation(R.id.goToMathematicsScreen, 8, MathematicsScreen.class, R.id.mathematicsScoreMainScreen);
-        setupNavigation(R.id.goToCommunicationSkills, 9, CommunicationSkillsScreen.class, R.id.communicationSkillsScoreMainScreen);
+        // Initialize all score views first
+        scoreViews.put(1, findViewById(R.id.osScoreMainScreen));
+        scoreViews.put(2, findViewById(R.id.algorithmsScoreMainScreen));
+        scoreViews.put(3, findViewById(R.id.programmingConceptsScoreMainScreen));
+        scoreViews.put(4, findViewById(R.id.softwareEngineeringScoreMainScreen));
+        scoreViews.put(5, findViewById(R.id.computerNetworksScoreMainScreen));
+        scoreViews.put(6, findViewById(R.id.electronicsSubjectsScoreMainScreen));
+        scoreViews.put(7, findViewById(R.id.computerArchitectureScoreMainScreen));
+        scoreViews.put(8, findViewById(R.id.mathematicsScoreMainScreen));
+        scoreViews.put(9, findViewById(R.id.communicationSkillsScoreMainScreen));
 
+        // Setup navigation for each subject screen
+        setupNavigation(R.id.gotoOperatingSystemScreen, 1, OperatingSystemsScreen.class);
+        setupNavigation(R.id.goToAlgorithmsScreen, 2, AlgorithmsScreen.class);
+        setupNavigation(R.id.goToProgrammingConcepts, 3, ProgrammingConceptsScreen.class);
+        setupNavigation(R.id.goToSoftwareEngineeringScreen, 4, SoftwareEngineeringScreen.class);
+        setupNavigation(R.id.goToComputerNetworksScreen, 5, ComputerNetworksScreen.class);
+        setupNavigation(R.id.goToElectronicsSubjectsScreen, 6, ElectronicsSubjectsScreen.class);
+        setupNavigation(R.id.goToComputerArchitectureScreen, 7, ComputerArchitectureScreen.class);
+        setupNavigation(R.id.goToMathematicsScreen, 8, MathematicsScreen.class);
+        setupNavigation(R.id.goToCommunicationSkills, 9, CommunicationSkillsScreen.class);
+
+        // Navigate to ResultScreen
         goToResultScreen.setOnClickListener(v -> {
             Intent intent = new Intent(MainScreen.this, ResultScreen.class);
 
-            // Pass the individual scores as extra data to the ResultScreen
+            // Pass all scores as extras
             for (Map.Entry<Integer, TextView> entry : scoreViews.entrySet()) {
-                int requestCode = entry.getKey();
-                String key = getScoreKey(requestCode);
-                String scoreText = entry.getValue().getText().toString();
+                int subjectId = entry.getKey();
+                TextView scoreView = entry.getValue();
+                String scoreText = scoreView.getText().toString();
 
-                // Convert score to float and scale it to 100 (i.e., score out of 100)
-                float scoreOutOf5 = extractScoreFromText(scoreText);
-                float scoreOutOf100 = scoreOutOf5 * 20f;
+                // Extract the numeric score from the text (e.g., "Score: 3/5" -> 3)
+                float score = extractScoreFromText(scoreText);
 
-                intent.putExtra(key, scoreOutOf100);
+                // Convert to out of 100 if needed (except for Algorithms which is already out of 100)
+                float scoreOutOf100 = (subjectId == 2) ? score : score * 20f;
+
+                // Put the score in intent with appropriate key
+                intent.putExtra(getScoreKey(subjectId), scoreOutOf100);
             }
 
             startActivity(intent);
         });
     }
 
-    private void setupNavigation(int buttonId, int requestCode, Class<?> targetClass, int scoreTextViewId) {
+    private void setupNavigation(int buttonId, int requestCode, Class<?> targetClass) {
         AppCompatButton button = findViewById(buttonId);
-        TextView scoreView = findViewById(scoreTextViewId);
-        scoreViews.put(requestCode, scoreView);
 
         ActivityResultLauncher<Intent> launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                getActivityResultCallback(requestCode)
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        TextView scoreView = scoreViews.get(requestCode);
+                        String key = getScoreKey(requestCode);
+                        String score = result.getData().getStringExtra(key);
+                        if (score != null && scoreView != null) {
+                            scoreView.setText("Score: " + score);
+                        }
+                    }
+                }
         );
 
         launchers.put(requestCode, launcher);
@@ -88,23 +111,6 @@ public class MainScreen extends AppCompatActivity {
             launcher.launch(intent);
         });
     }
-
-    private ActivityResultCallback<ActivityResult> getActivityResultCallback(int requestCode) {
-        return result -> {
-            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                TextView scoreView = scoreViews.get(requestCode);
-                String key = getScoreKey(requestCode);
-
-                if (scoreView != null && key != null) {
-                    String score = result.getData().getStringExtra(key);
-                    if (score != null) {
-                        scoreView.setText("Score: " + score);
-                    }
-                }
-            }
-        };
-    }
-
 
     private String getScoreKey(int requestCode) {
         switch (requestCode) {
@@ -123,9 +129,14 @@ public class MainScreen extends AppCompatActivity {
 
     private float extractScoreFromText(String text) {
         try {
-            String[] parts = text.split(":");
-            String raw = parts[1].replaceAll("/.*", "").trim(); // number before "/"
-            return Float.parseFloat(raw);
+            // Remove "Score: " prefix if present
+            if (text.startsWith("Score: ")) {
+                text = text.substring("Score: ".length());
+            }
+
+            // Split by "/" and take the first part
+            String[] parts = text.split("/");
+            return Float.parseFloat(parts[0].trim());
         } catch (Exception e) {
             return 0f;
         }
