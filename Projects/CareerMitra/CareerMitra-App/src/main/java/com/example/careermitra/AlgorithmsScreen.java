@@ -45,8 +45,8 @@ public class AlgorithmsScreen extends AppCompatActivity {
 
         questionContainer = findViewById(R.id.AlgorithmsQuestionContainer);
 
-        loadFixedQuestions();
-        createQuiz(fixedQuestions); // Only 5 questions
+        loadFixedQuestions();  // Load 10 questions now
+        createQuiz(fixedQuestions); // Create quiz with 10 questions
         addSubmitButton();
         addScoreView();
     }
@@ -78,6 +78,32 @@ public class AlgorithmsScreen extends AppCompatActivity {
                 "5. Which algorithm is used for cycle detection in graphs?",
                 new String[]{"Dijkstra", "DFS", "BFS", "Prim"},
                 "DFS"
+        ));
+        // Add 5 more questions
+        fixedQuestions.add(new Question(
+                "6. What is the worst-case time complexity of quicksort?",
+                new String[]{"O(n)", "O(log n)", "O(n log n)", "O(n^2)"},
+                "O(n^2)"
+        ));
+        fixedQuestions.add(new Question(
+                "7. Which algorithm is used to find the maximum flow in a network?",
+                new String[]{"Bellman-Ford", "Dijkstra", "Ford-Fulkerson", "Kruskal"},
+                "Ford-Fulkerson"
+        ));
+        fixedQuestions.add(new Question(
+                "8. Which sorting algorithm has the best average time complexity?",
+                new String[]{"Bubble Sort", "Quick Sort", "Merge Sort", "Insertion Sort"},
+                "Quick Sort"
+        ));
+        fixedQuestions.add(new Question(
+                "9. Which data structure is used in the implementation of recursion?",
+                new String[]{"Queue", "Stack", "Array", "Linked List"},
+                "Stack"
+        ));
+        fixedQuestions.add(new Question(
+                "10. Which algorithm is used for finding the minimum spanning tree of a graph?",
+                new String[]{"Prim's Algorithm", "Kruskal's Algorithm", "DFS", "Dijkstra's Algorithm"},
+                "Prim's Algorithm"
         ));
     }
 
@@ -175,13 +201,15 @@ public class AlgorithmsScreen extends AppCompatActivity {
             }
         }
 
-        String scoreText = "You scored " + score + " out of 5";
+        // Calculate the score as percentage out of 100
+        int percentageScore = (score * 100) / 10;  // 10 questions, so multiply by 100 and divide by 10
+        String scoreText = "You scored " + percentageScore + " out of 100";
         scoreTextView.setText(scoreText);
-        Toast.makeText(this, "Score: " + score + "/5", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Score: " + percentageScore + "/100", Toast.LENGTH_SHORT).show();
 
-        // Send score back to MainScreen
+        // Send score back to MainScreen as an integer
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("algo_score", score + "/5");
+        resultIntent.putExtra("algo_score", percentageScore);  // Passing as integer
         setResult(RESULT_OK, resultIntent);
         finish(); // End activity
     }
