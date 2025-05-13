@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -41,7 +40,7 @@ public class MainScreen extends AppCompatActivity {
         goToResultScreen = findViewById(R.id.goToResultScreen);
         btnResetScore = findViewById(R.id.btnResetScore);
 
-        // Initialize all score views
+        // Initialize score views
         scoreViews.put(1, findViewById(R.id.osScoreMainScreen));
         scoreViews.put(2, findViewById(R.id.algorithmsScoreMainScreen));
         scoreViews.put(3, findViewById(R.id.programmingConceptsScoreMainScreen));
@@ -52,10 +51,10 @@ public class MainScreen extends AppCompatActivity {
         scoreViews.put(8, findViewById(R.id.mathematicsScoreMainScreen));
         scoreViews.put(9, findViewById(R.id.communicationSkillsScoreMainScreen));
 
-        // Load saved scores from SharedPreferences
+        // Load previously saved scores
         loadSavedScores();
 
-        // Setup navigation
+        // Setup navigation for each subject
         setupNavigation(R.id.gotoOperatingSystemScreen, 1, OperatingSystemsScreen.class);
         setupNavigation(R.id.goToAlgorithmsScreen, 2, AlgorithmsScreen.class);
         setupNavigation(R.id.goToProgrammingConcepts, 3, ProgrammingConceptsScreen.class);
@@ -66,7 +65,7 @@ public class MainScreen extends AppCompatActivity {
         setupNavigation(R.id.goToMathematicsScreen, 8, MathematicsScreen.class);
         setupNavigation(R.id.goToCommunicationSkills, 9, CommunicationSkillsScreen.class);
 
-        // Go to result screen
+        // Result screen navigation
         goToResultScreen.setOnClickListener(v -> {
             Intent intent = new Intent(MainScreen.this, ResultScreen.class);
 
@@ -74,6 +73,7 @@ public class MainScreen extends AppCompatActivity {
                 int subjectId = entry.getKey();
                 TextView scoreView = entry.getValue();
                 String scoreText = scoreView.getText().toString();
+
                 float score = extractScoreFromText(scoreText);
                 float scoreOutOf100 = (subjectId == 1 || subjectId == 2) ? score : score * 20f;
                 intent.putExtra(getScoreKey(subjectId), scoreOutOf100);
@@ -82,13 +82,13 @@ public class MainScreen extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Reset all scores
+        // Reset scores button
         btnResetScore.setOnClickListener(v -> {
             SharedPreferences prefs = getSharedPreferences("user_scores", MODE_PRIVATE);
-            prefs.edit().clear().apply(); // Clear saved data
+            prefs.edit().clear().apply();
 
             for (TextView scoreView : scoreViews.values()) {
-                scoreView.setText("Score: 0/5");
+                scoreView.setText("Not Attempted");
             }
         });
     }
@@ -105,7 +105,10 @@ public class MainScreen extends AppCompatActivity {
                         String score = result.getData().getStringExtra(key);
                         if (score != null && scoreView != null) {
                             scoreView.setText("Score: " + score);
-                            saveScoreToPreferences(requestCode, score);
+
+                            // Save the score persistently
+                            SharedPreferences prefs = getSharedPreferences("user_scores", MODE_PRIVATE);
+                            prefs.edit().putString(key, score).apply();
                         }
                     }
                 }
@@ -117,22 +120,6 @@ public class MainScreen extends AppCompatActivity {
             Intent intent = new Intent(MainScreen.this, targetClass);
             launcher.launch(intent);
         });
-    }
-
-    private void saveScoreToPreferences(int subjectId, String score) {
-        SharedPreferences prefs = getSharedPreferences("user_scores", MODE_PRIVATE);
-        prefs.edit().putString(getScoreKey(subjectId), score).apply();
-    }
-
-    private void loadSavedScores() {
-        SharedPreferences prefs = getSharedPreferences("user_scores", MODE_PRIVATE);
-        for (Map.Entry<Integer, TextView> entry : scoreViews.entrySet()) {
-            int subjectId = entry.getKey();
-            String savedScore = prefs.getString(getScoreKey(subjectId), null);
-            if (savedScore != null) {
-                entry.getValue().setText("Score: " + savedScore);
-            }
-        }
     }
 
     private String getScoreKey(int requestCode) {
@@ -159,6 +146,19 @@ public class MainScreen extends AppCompatActivity {
             return Float.parseFloat(parts[0].trim());
         } catch (Exception e) {
             return 0f;
+        }
+    }
+
+    private void loadSavedScores() {
+        SharedPreferences prefs = getSharedPreferences("user_scores", MODE_PRIVATE);
+        for (Map.Entry<Integer, TextView> entry : scoreViews.entrySet()) {
+            int subjectId = entry.getKey();
+            String savedScore = prefs.getString(getScoreKey(subjectId), null);
+            if (savedScore != null) {
+                entry.getValue().setText("Score: " + savedScore);
+            } else {
+                entry.getValue().setText("Not Attempted");
+            }
         }
     }
 }
