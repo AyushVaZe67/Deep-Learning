@@ -2,13 +2,12 @@ package com.example.careermitra;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +23,7 @@ public class MainScreen extends AppCompatActivity {
 
     Map<Integer, TextView> scoreViews = new HashMap<>();
     Map<Integer, ActivityResultLauncher<Intent>> launchers = new HashMap<>();
-    AppCompatButton goToResultScreen;
+    AppCompatButton goToResultScreen, btnResetScore;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -40,8 +39,9 @@ public class MainScreen extends AppCompatActivity {
         });
 
         goToResultScreen = findViewById(R.id.goToResultScreen);
+        btnResetScore = findViewById(R.id.btnResetScore);
 
-        // Initialize all score views first
+        // Initialize all score views
         scoreViews.put(1, findViewById(R.id.osScoreMainScreen));
         scoreViews.put(2, findViewById(R.id.algorithmsScoreMainScreen));
         scoreViews.put(3, findViewById(R.id.programmingConceptsScoreMainScreen));
@@ -52,7 +52,10 @@ public class MainScreen extends AppCompatActivity {
         scoreViews.put(8, findViewById(R.id.mathematicsScoreMainScreen));
         scoreViews.put(9, findViewById(R.id.communicationSkillsScoreMainScreen));
 
-        // Setup navigation for each subject screen
+        // Load saved scores from SharedPreferences
+        loadSavedScores();
+
+        // Setup navigation
         setupNavigation(R.id.gotoOperatingSystemScreen, 1, OperatingSystemsScreen.class);
         setupNavigation(R.id.goToAlgorithmsScreen, 2, AlgorithmsScreen.class);
         setupNavigation(R.id.goToProgrammingConcepts, 3, ProgrammingConceptsScreen.class);
@@ -63,27 +66,30 @@ public class MainScreen extends AppCompatActivity {
         setupNavigation(R.id.goToMathematicsScreen, 8, MathematicsScreen.class);
         setupNavigation(R.id.goToCommunicationSkills, 9, CommunicationSkillsScreen.class);
 
-        // Navigate to ResultScreen
+        // Go to result screen
         goToResultScreen.setOnClickListener(v -> {
             Intent intent = new Intent(MainScreen.this, ResultScreen.class);
 
-            // Pass all scores as extras
             for (Map.Entry<Integer, TextView> entry : scoreViews.entrySet()) {
                 int subjectId = entry.getKey();
                 TextView scoreView = entry.getValue();
                 String scoreText = scoreView.getText().toString();
-
-                // Extract the numeric score from the text (e.g., "Score: 3/5" -> 3)
                 float score = extractScoreFromText(scoreText);
-
-                // Convert to out of 100 if needed (except for Algorithms which is already out of 100)
-                float scoreOutOf100 = (subjectId == 2) ? score : score * 20f;
-
-                // Put the score in intent with appropriate key
+                float scoreOutOf100 = (subjectId == 1 || subjectId == 2) ? score : score * 20f;
                 intent.putExtra(getScoreKey(subjectId), scoreOutOf100);
             }
 
             startActivity(intent);
+        });
+
+        // Reset all scores
+        btnResetScore.setOnClickListener(v -> {
+            SharedPreferences prefs = getSharedPreferences("user_scores", MODE_PRIVATE);
+            prefs.edit().clear().apply(); // Clear saved data
+
+            for (TextView scoreView : scoreViews.values()) {
+                scoreView.setText("Score: 0/5");
+            }
         });
     }
 
@@ -99,6 +105,7 @@ public class MainScreen extends AppCompatActivity {
                         String score = result.getData().getStringExtra(key);
                         if (score != null && scoreView != null) {
                             scoreView.setText("Score: " + score);
+                            saveScoreToPreferences(requestCode, score);
                         }
                     }
                 }
@@ -110,6 +117,22 @@ public class MainScreen extends AppCompatActivity {
             Intent intent = new Intent(MainScreen.this, targetClass);
             launcher.launch(intent);
         });
+    }
+
+    private void saveScoreToPreferences(int subjectId, String score) {
+        SharedPreferences prefs = getSharedPreferences("user_scores", MODE_PRIVATE);
+        prefs.edit().putString(getScoreKey(subjectId), score).apply();
+    }
+
+    private void loadSavedScores() {
+        SharedPreferences prefs = getSharedPreferences("user_scores", MODE_PRIVATE);
+        for (Map.Entry<Integer, TextView> entry : scoreViews.entrySet()) {
+            int subjectId = entry.getKey();
+            String savedScore = prefs.getString(getScoreKey(subjectId), null);
+            if (savedScore != null) {
+                entry.getValue().setText("Score: " + savedScore);
+            }
+        }
     }
 
     private String getScoreKey(int requestCode) {
@@ -129,12 +152,9 @@ public class MainScreen extends AppCompatActivity {
 
     private float extractScoreFromText(String text) {
         try {
-            // Remove "Score: " prefix if present
             if (text.startsWith("Score: ")) {
                 text = text.substring("Score: ".length());
             }
-
-            // Split by "/" and take the first part
             String[] parts = text.split("/");
             return Float.parseFloat(parts[0].trim());
         } catch (Exception e) {
