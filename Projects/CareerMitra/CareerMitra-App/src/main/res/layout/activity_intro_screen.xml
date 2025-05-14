@@ -4,23 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:orientation="vertical"
-    android:background="@color/primary_light_blue"
+    android:background="@color/light_gray"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     tools:context=".IntroScreen">
 
     <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginTop="550dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:background="@color/button_blue"
-        android:layout_height="wrap_content"
-        android:text="NEXT SCREEN"
         android:id="@+id/goToMainScreen"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_background"
+        android:paddingVertical="16dp"
+        android:text="NEXT SCREEN"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:elevation="4dp"
+        android:stateListAnimator="@null"
+        app:backgroundTint="@null" />
 
 </LinearLayout>

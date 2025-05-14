@@ -16,4 +16,6 @@
 
     <!-- Button Colors -->
     <color name="button_blue">#0D47A1</color>
+    <color name="button_blue_pressed">#002171</color> <!-- Darker shade for pressed state -->
+    <color name="ripple_color">#5090CAF9</color> <!-- Semi-transparent primary_light_blue for ripple -->
 </resources>
