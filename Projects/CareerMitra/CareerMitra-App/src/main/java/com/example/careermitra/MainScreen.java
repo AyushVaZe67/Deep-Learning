@@ -76,7 +76,7 @@ public class MainScreen extends AppCompatActivity {
 
                 float score = extractScoreFromText(scoreText);
                 float scoreOutOf100 = (subjectId == 1 || subjectId == 2 || subjectId == 3 || subjectId == 4 ) ? score : score * 20f;
-                intent.putExtra(getScoreKey(subjectId), scoreOutOf100);
+                intent.putExtra(getScoreKey(subjectId), score);
             }
 
             startActivity(intent);

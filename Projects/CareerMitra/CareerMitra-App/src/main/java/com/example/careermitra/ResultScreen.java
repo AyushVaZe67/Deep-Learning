@@ -10,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -24,7 +22,6 @@ public class ResultScreen extends AppCompatActivity {
     TextView finalOutput;
     ProgressBar progressBar;
 
-    // All scores as floats for display purposes
     float os_score, algorithms_score, programming_score, se_score,
             cn_score, electronics_score, ca_score, math_score, comm_score;
 
@@ -37,20 +34,18 @@ public class ResultScreen extends AppCompatActivity {
         finalOutput = findViewById(R.id.finalOutput);
         progressBar = findViewById(R.id.progressBar);
 
-        // Get all scores from intent
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            os_score = extras.getFloat("os_score", 0f);
-            algorithms_score = extras.getFloat("algo_score", 0f);
-            programming_score = extras.getFloat("programming_score", 0f);
-            se_score = extras.getFloat("se_score", 0f);
-            cn_score = extras.getFloat("cn_score", 0f);
-            electronics_score = extras.getFloat("electronics_score", 0f);
-            ca_score = extras.getFloat("ca_score", 0f);
-            math_score = extras.getFloat("math_score", 0f);
-            comm_score = extras.getFloat("comm_score", 0f);
+            os_score = extras.getFloat("os_score", -1f);
+            algorithms_score = extras.getFloat("algo_score", -1f);
+            programming_score = extras.getFloat("programming_score", -1f);
+            se_score = extras.getFloat("se_score", -1f);
+            cn_score = extras.getFloat("cn_score", -1f);
+            electronics_score = extras.getFloat("electronics_score", -1f);
+            ca_score = extras.getFloat("ca_score", -1f);
+            math_score = extras.getFloat("math_score", -1f);
+            comm_score = extras.getFloat("comm_score", -1f);
 
-            // Display all scores (still showing as float for better user experience)
             setScore(R.id.osResult, os_score);
             setScore(R.id.algorithmsResult, algorithms_score);
             setScore(R.id.programmingResult, programming_score);
@@ -62,12 +57,17 @@ public class ResultScreen extends AppCompatActivity {
             setScore(R.id.commResult, comm_score);
         } else {
             Toast.makeText(this, "No scores received", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         btnPredict.setOnClickListener(v -> {
+            if (hasMissingOrZeroScores()) {
+                Toast.makeText(this, "Please make sure all scores are filled and non-zero.", Toast.LENGTH_LONG).show();
+                return;
+            }
+
             JSONObject data = new JSONObject();
             try {
-                // Convert all scores to integers before sending to API
                 data.put("Acedamic percentage in Operating Systems", (int) os_score);
                 data.put("percentage in Algorithms", (int) algorithms_score);
                 data.put("Percentage in Programming Concepts", (int) programming_score);
@@ -90,9 +90,18 @@ public class ResultScreen extends AppCompatActivity {
     private void setScore(int viewId, float score) {
         TextView resultView = findViewById(viewId);
         if (resultView != null) {
-            // Still showing float to user for better precision
-            resultView.setText(String.format("Score: %.1f/100", score));
+            if (score <= 0f) {
+                resultView.setText("Score: Not Entered");
+            } else {
+                resultView.setText(String.format("Score: %.1f/100", score));
+            }
         }
+    }
+
+    private boolean hasMissingOrZeroScores() {
+        return os_score <= 0 || algorithms_score <= 0 || programming_score <= 0 ||
+                se_score <= 0 || cn_score <= 0 || electronics_score <= 0 ||
+                ca_score <= 0 || math_score <= 0 || comm_score <= 0;
     }
 
     private void sendRequestToAPI(JSONObject data) {
